@@ -1,7 +1,7 @@
 {
   "title": "𝕏𝕚𝕪𝕦𝕝𝕚𝕦'𝕤 𝕎𝕚𝕕𝕘𝕖𝕥𝕤",
   "description": "自建库，界面展示作者仅为展示效果统一无实际意义，请勿上纲上线",
-  "icon": "https://raw.githubusercontent.com/xiyuliu509/xiyuliu-forward/refs/heads/master/ForwardWidget.png",
+  "icon": "https://raw.githubusercontent.com/xiyuliu509/xiyuliu-forward/refs/heads/master/icon.png",
   "widgets": [
     {
       "id": "Aggregation_list",
