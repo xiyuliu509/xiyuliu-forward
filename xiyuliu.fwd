@@ -1,7 +1,7 @@
 {
   "title": "𝕏𝕚𝕪𝕦𝕝𝕚𝕦'𝕤 𝕎𝕚𝕕𝕘𝕖𝕥𝕤",
   "description": "本模块仅供个人使用，向每一位开发者致以最崇高的敬意。",
-  "icon": "https://raw.githubusercontent.com/xiyuliu509/xiyuliu-forward/refs/heads/master/icon.png",
+  "icon": "https://raw.githubusercontent.com/xiyuliu509/xiyuliu-forward/refs/heads/master/forward_icon.png",
   "widgets": [
     {
       "id": "Aggregation_list",
