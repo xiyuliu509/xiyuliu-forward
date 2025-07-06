@@ -1,3 +1,9 @@
+// =============UserScript=============
+// @name         Bangumi 热门榜单
+// @version      2.0.0
+// @description  获取Bangumi近期热门、每日放送数据，支持榜单筛选
+// @author       Autism(原作者)，经二次优化图标后
+// =============UserScript=============
 // --- 核心配置 ---
 const BASE_DATA_URL = "https://raw.githubusercontent.com/opix-maker/Forward/main";
 const RECENT_DATA_URL = `${BASE_DATA_URL}/recent_data.json`;
@@ -11,11 +17,11 @@ for (let year = startYear; year >= 1940; year--) {
 }
 
 var WidgetMetadata = {
-    id: "bangumi_charts_tmdb_v3",
+    id: "Bangumi_charts",
     title: "Bangumi 热门榜单",
     description: "获取Bangumi近期热门、每日放送数据，支持榜单筛选。",
-    version: "2.0.0",
-    author: "Autism ",
+    version: "1.0.1",
+    author: "𝕏𝕚𝕪𝕦𝕝𝕚𝕦",
     site: "https://github.com/opix-maker/Forward",
     requiredVersion: "0.0.1",
     detailCacheDuration: 6000,
