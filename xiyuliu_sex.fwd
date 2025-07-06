@@ -10,7 +10,7 @@
       "requiredVersion": "0.0.1",
       "version": "1.0.1",
       "author": "𝕏𝕚𝕪𝕦𝕝𝕚𝕦",
-      "url": "https://raw.githubusercontent.com/pack1r/ForwardWidgets/refs/heads/main/widgets/jable.js"
+      "url": "https://raw.githubusercontent.com/xiyuliu509/xiyuliu-forward/refs/heads/master/ForwardWidgets/Eden/jable.js"
     },
     {
       "id": "91porn",
@@ -19,7 +19,7 @@
       "requiredVersion": "0.0.1",
       "version": "1.0.1",
       "author": "𝕏𝕚𝕪𝕦𝕝𝕚𝕦",
-      "url": "https://github.com/baranwang/forward-widget/releases/latest/download/91porn.js"
+      "url": "https://raw.githubusercontent.com/xiyuliu509/xiyuliu-forward/refs/heads/master/ForwardWidgets/Eden/91porn.js"
     },
     {
       "id": "Pornhub",
@@ -28,7 +28,7 @@
       "requiredVersion": "0.0.1",
       "version": "1.0.4",
       "author": "𝕏𝕚𝕪𝕦𝕝𝕚𝕦",
-      "url": "https://raw.githubusercontent.com/Madai-v/ForwardWidgets/refs/heads/main/Widgets/ph.js"
+      "url": "https://raw.githubusercontent.com/xiyuliu509/xiyuliu-forward/refs/heads/master/ForwardWidgets/Eden/ph.js"
     },
     {
       "id": "javday",
@@ -37,7 +37,7 @@
       "requiredVersion": "0.0.1",
       "version": "1.0.1",
       "author": "𝕏𝕚𝕪𝕦𝕝𝕚𝕦",
-      "url": "https://raw.githubusercontent.com/pack1r/ForwardWidgets/refs/heads/main/widgets/javday.js"
+      "url": "https://raw.githubusercontent.com/xiyuliu509/xiyuliu-forward/refs/heads/master/ForwardWidgets/Eden/javday.js"
     },
     {
       "id": "javrate",
@@ -46,7 +46,7 @@
       "requiredVersion": "0.0.1",
       "version": "1.0.1",
       "author": "𝕏𝕚𝕪𝕦𝕝𝕚𝕦",
-      "url": "https://raw.githubusercontent.com/pack1r/ForwardWidgets/refs/heads/main/widgets/javrate.js"
+      "url": "https://raw.githubusercontent.com/xiyuliu509/xiyuliu-forward/refs/heads/master/ForwardWidgets/Eden/javrate.js"
     },
     {
       "id": "xvideos",
@@ -55,7 +55,7 @@
       "requiredVersion": "0.0.1",
       "version": "1.0.1",
       "author": "𝕏𝕚𝕪𝕦𝕝𝕚𝕦",
-      "url": "https://github.com/baranwang/forward-widget/releases/latest/download/xvideos.js"
+      "url": "https://raw.githubusercontent.com/xiyuliu509/xiyuliu-forward/refs/heads/master/ForwardWidgets/Eden/xvideos.js"
     }
   ]
 }
