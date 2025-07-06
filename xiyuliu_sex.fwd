@@ -1,0 +1,61 @@
+{
+  "title": "𝕏𝕚𝕪𝕦𝕝𝕚𝕦'𝕤𝕖𝕩 𝕎𝕚𝕕𝕘𝕖𝕥𝕤",
+  "description": "汇集瑟瑟网页等模块",
+  "icon": "https://github.com/pack1r/ForwardWidgets/raw/main/icon.png",
+  "widgets": [
+    {
+      "id": "jable",
+      "title": "Jable",
+      "description": "获取Jable全站视频",
+      "requiredVersion": "0.0.1",
+      "version": "1.0.1",
+      "author": "𝕏𝕚𝕪𝕦𝕝𝕚𝕦",
+      "url": "https://raw.githubusercontent.com/pack1r/ForwardWidgets/refs/heads/main/widgets/jable.js"
+    },
+    {
+      "id": "91porn",
+      "title": "91Porn",
+      "description": "获取 91Porn 视频",
+      "requiredVersion": "0.0.1",
+      "version": "1.0.1",
+      "author": "𝕏𝕚𝕪𝕦𝕝𝕚𝕦",
+      "url": "https://github.com/baranwang/forward-widget/releases/latest/download/91porn.js"
+    },
+    {
+      "id": "Pornhub",
+      "title": "Pornhub",
+      "description": "在线观看Pornhub",
+      "requiredVersion": "0.0.1",
+      "version": "1.0.4",
+      "author": "𝕏𝕚𝕪𝕦𝕝𝕚𝕦",
+      "url": "https://raw.githubusercontent.com/Madai-v/ForwardWidgets/refs/heads/main/Widgets/ph.js"
+    },
+    {
+      "id": "javday",
+      "title": "JAVDay",
+      "description": "获取 JAVDay 推荐",
+      "requiredVersion": "0.0.1",
+      "version": "1.0.1",
+      "author": "𝕏𝕚𝕪𝕦𝕝𝕚𝕦",
+      "url": "https://raw.githubusercontent.com/pack1r/ForwardWidgets/refs/heads/main/widgets/javday.js"
+    },
+    {
+      "id": "javrate",
+      "title": "JAVRate",
+      "description": "获取 JAVRate 推荐",
+      "requiredVersion": "0.0.1",
+      "version": "1.0.1",
+      "author": "𝕏𝕚𝕪𝕦𝕝𝕚𝕦",
+      "url": "https://raw.githubusercontent.com/pack1r/ForwardWidgets/refs/heads/main/widgets/javrate.js"
+    },
+    {
+      "id": "xvideos",
+      "title": "XVideos",
+      "description": "Xvideos",
+      "requiredVersion": "0.0.1",
+      "version": "1.0.1",
+      "author": "𝕏𝕚𝕪𝕦𝕝𝕚𝕦",
+      "url": "https://github.com/baranwang/forward-widget/releases/latest/download/xvideos.js"
+    }
+  ]
+}
