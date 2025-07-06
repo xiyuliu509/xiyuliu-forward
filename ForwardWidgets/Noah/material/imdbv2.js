@@ -1,3 +1,9 @@
+// =============UserScript=============
+// @name         IMDb 分类资源 v2
+// @version      2.0.0
+// @description  聚合 IMDb 热门影视资源
+// @author       Autism(原作者)，经二次优化图标后
+// =============UserScript=============
 const GITHUB_OWNER = "opix-maker";
 const GITHUB_REPO = "Forward";
 const GITHUB_BRANCH = "main";
@@ -96,12 +102,12 @@ const categoryParam = { name: "category", title: "选择分类/主题", type: "e
 
 // --- 元数据 ---
 var WidgetMetadata = {
-    id: "imdb_discovery_final_v2", 
+    id: "Imdb_discovery_v2", 
     title: "IMDb 分类资源 v2",
     description: "聚合 IMDb 热门影视资源",
-    author: "Autism",
+    author: "𝕏𝕚𝕪𝕦𝕝𝕚𝕦",
     site: "https://github.com/opix-maker/Forward",
-    version: "2.0.0", 
+    version: "1.0.1", 
     requiredVersion: "0.0.1",
     detailCacheDuration: 36000, 
     cacheDuration: 3600, 
@@ -109,8 +115,8 @@ var WidgetMetadata = {
         { title: "🔥 近期热门",   functionName: "listRecentHot",   params: [contentTypeParam, regionFilterParam, sortParam("hs_desc"), pageParam], cacheDuration: 1800, requiresWebView: false },
         { title: "📁 分类/主题", functionName: "listByCategory",  params: [categoryParam, contentTypeParam, regionFilterParam, sortParam(), pageParam], cacheDuration: 3600, requiresWebView: false },
         { title: "📆 按年份浏览", functionName: "listByYear",      params: [yearEnumParam, contentTypeParam, regionFilterParam, sortParam("d_desc"), pageParam], cacheDuration: 3600, requiresWebView: false },
-        { title: "📽 电影",       functionName: "listMovies",      params: [regionParamSelect, sortParam(), pageParam], cacheDuration: 3600, requiresWebView: false },
-        { title: "📺剧集",       functionName: "listTVSeries",    params: [regionParamSelect, sortParam(), pageParam], cacheDuration: 3600, requiresWebView: false },
+        { title: "🎥 电影",       functionName: "listMovies",      params: [regionParamSelect, sortParam(), pageParam], cacheDuration: 3600, requiresWebView: false },
+        { title: "📺 剧集",       functionName: "listTVSeries",    params: [regionParamSelect, sortParam(), pageParam], cacheDuration: 3600, requiresWebView: false },
         { title: "✨ 动画",       functionName: "listAnime",       params: [regionParamSelect, sortParam(), pageParam], cacheDuration: 3600, requiresWebView: false },
    ]
 };
