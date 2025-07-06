@@ -1170,10 +1170,10 @@ WidgetMetadata = {
       ],
     },
   ],
-  version: "1.0.13",
+  version: "1.0.1",
   requiredVersion: "0.0.1",
-  description: "解析豆瓣想看、在看、已看以及根据个人数据生成的个性化推荐【五折码：CHEAP.5;七折码：CHEAP】",
-  author: "huangxd",
+  description: "获取豆瓣在看、片单并进行个性化推荐",
+  author: "𝕏𝕚𝕪𝕦𝕝𝕚𝕦",
   site: "https://github.com/huangxd-/ForwardWidgets"
 };
 
