@@ -5,12 +5,12 @@
 // @author       阿米诺斯(原作者)，经二次优化图标后
 // =============UserScript=============
 WidgetMetadata = {
-  id: "forward.combined.media.lists",
+  id: "Aggregation_list",
   title: "影视榜单",
   description: "聚合豆瓣、TMDB、IMDB和Bangumi的影视动画榜单",
-  author: "xiyuliu",
+  author: "𝕏𝕚𝕪𝕦𝕝𝕚𝕦",
   site: "https://github.com/quantumultxx/FW-Widgets",
-  version: "1.2.7.1",
+  version: "1.0.1",
   requiredVersion: "0.0.1",
   detailCacheDuration: 60,
   modules: [
