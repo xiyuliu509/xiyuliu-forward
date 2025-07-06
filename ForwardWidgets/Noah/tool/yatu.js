@@ -196,10 +196,10 @@ WidgetMetadata = {
             ],
         },
     ],
-    version: "1.0.6",
+    version: "1.0.1",
     requiredVersion: "0.0.1",
-    description: "解析雅图每日放送更新以及各类排行榜【五折码：CHEAP.5;七折码：CHEAP】",
-    author: "huangxd",
+    description: "按每日热点或排行获取影视雅图",
+    author: "𝕏𝕚𝕪𝕦𝕝𝕚𝕦",
     site: "https://github.com/huangxd-/ForwardWidgets"
 };
 
