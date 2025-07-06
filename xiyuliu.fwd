@@ -56,15 +56,6 @@
       "version": "1.0.1",
       "author": "𝕏𝕚𝕪𝕦𝕝𝕚𝕦",
       "url": "https://raw.githubusercontent.com/xiyuliu509/xiyuliu-forward/refs/heads/master/ForwardWidgets/Noah/tool/yatu.js"
-    },
-    {
-       "id": "Yatu_pro",
-       "title": "雅图每日放送&排行榜",
-       "description": "按每日热点或排行获取影视雅图",
-       "requiredVersion": "0.0.1",
-       "version": "1.0.1",
-       "author": "𝕏𝕚𝕪𝕦𝕝𝕚𝕦",
-       "url": "https://raw.githubusercontent.com/xiyuliu509/xiyuliu-forward/refs/heads/master/ForwardWidgets/Noah/tool/yatupro.js"
     }
   ]
 }
