@@ -10,7 +10,7 @@ WidgetMetadata = {
   description: "聚合豆瓣、TMDB、IMDB和Bangumi的影视动画榜单",
   author: "𝕏𝕚𝕪𝕦𝕝𝕚𝕦",
   site: "https://github.com/quantumultxx/FW-Widgets",
-  version: "1.0.1",
+  version: "1.0.2",
   requiredVersion: "0.0.1",
   detailCacheDuration: 60,
   modules: [
