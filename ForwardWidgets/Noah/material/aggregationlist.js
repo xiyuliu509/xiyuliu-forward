@@ -1,6 +1,6 @@
 // =============UserScript=============
 // @name         影视聚合查询组件
-// @version      1.2.7.1
+// @version      1.2.9
 // @description  聚合查询豆瓣/TMDB/IMDB/BGM影视数据
 // @author       阿米诺斯(原作者)，经二次优化图标后
 // =============UserScript=============
@@ -28,7 +28,7 @@ WidgetMetadata = {
           type: "constant", 
           value: "https://m.douban.com/rexxar/api/v2/subject_collection/movie_real_time_hotest/items" },
         { name: "type", 
-          title: "🗂类型", 
+          title: "🗂 类型", 
           type: "constant", 
           value: "movie" },
         { name: "page", title: "页码", type: "page" },
@@ -47,7 +47,7 @@ WidgetMetadata = {
           type: "constant", 
           value: "https://m.douban.com/rexxar/api/v2/subject_collection/tv_real_time_hotest/items" },
         { name: "type", 
-          title: "🗂类型", 
+          title: "🗂 类型", 
           type: "constant", 
           value: "tv" },
         { name: "page", title: "页码", type: "page" },
@@ -99,7 +99,7 @@ WidgetMetadata = {
       ]
     },
 
-    // --- 🔎 探索发现 ---
+    // --- 🎬 探索发现 ---
     {
       title: "豆瓣电影推荐",
       description: "按分类、地区、类型标签浏览豆瓣推荐电影",
@@ -121,7 +121,7 @@ WidgetMetadata = {
         },
         {
           name: "type", 
-          title: "🌏 地区", 
+          title: "🌍 地区", 
           type: "enumeration",
           value: "全部",
           belongTo: {
@@ -243,36 +243,25 @@ WidgetMetadata = {
         ]
     },
     {
-        title: "TMDB 本日热门",
-        description: "今日热门电影与剧集",
-        requiresWebView: false,
-        functionName: "tmdbTrending",
-        cacheDuration: 900,
-        params: [
-            { name: "time_window", 
-              title: "时间", 
-              type: "constant", 
-              value: "day" },
-            { name: "language", title: "语言", type: "constant", value: "zh-CN" },
-            { name: "page", title: "页码", type: "page" }
-        ]
+      title: "TMDB 今日热门",
+      description: "今日热门电影与剧集",
+      requiresWebView: false,
+      functionName: "loadTodayGlobalMedia",
+      cacheDuration: 60,
+      params: [
+        { name: "language", title: "语言", type: "language", value: "zh-CN" }
+      ]
     },
     {
-        title: "TMDB 本周热门",
-        description: "本周热门电影与剧集",
-        requiresWebView: false,
-        functionName: "tmdbTrending",
-        cacheDuration: 900,
-        params: [
-            { name: "time_window", 
-              title: "时间", 
-              type: "constant", 
-              value: "week" },
-            { name: "language", title: "语言", type: "constant", value: "zh-CN" },
-            { name: "page", title: "页码", type: "page" }
-        ]
+      title: "TMDB 本周热门",
+      description: "本周热门电影与剧集",
+      requiresWebView: false,
+      functionName: "loadWeekGlobalMovies",
+      cacheDuration: 60,
+      params: [
+        { name: "language", title: "语言", type: "language", value: "zh-CN" }
+      ]
     },
-
     // --- 常规发现模块 ---
     {
         title: "TMDB 高分内容",
@@ -461,6 +450,7 @@ WidgetMetadata = {
             { title: "爱情", value: "10749" },
             { title: "犯罪", value: "80" },
             { title: "科幻", value: "878" },
+            { title: "记录", value: "99" },
             { title: "西部", value: "37" },
             { title: "音乐", value: "10402" },
             { title: "电视电影", value: "10770" }
@@ -973,6 +963,43 @@ WidgetMetadata = {
 };
 
 // ===============辅助函数===============
+let tmdbGenresCache = null;
+
+async function fetchTmdbGenres() {
+    if (tmdbGenresCache) return tmdbGenresCache;
+    try {
+        const [movieGenres, tvGenres] = await Promise.all([
+            Widget.tmdb.get('/genre/movie/list', { params: { language: 'zh-CN' } }),
+            Widget.tmdb.get('/genre/tv/list', { params: { language: 'zh-CN' } })
+        ]);
+        
+        tmdbGenresCache = {
+            movie: movieGenres.genres.reduce((acc, g) => ({ ...acc, [g.id]: g.name }), {}),
+            tv: tvGenres.genres.reduce((acc, g) => ({ ...acc, [g.id]: g.name }), {})
+        };
+        return tmdbGenresCache;
+    } catch (error) {
+        console.error("获取TMDB类型映射失败:", error);
+        return { movie: {}, tv: {} };
+    }
+}
+
+function getTmdbGenreTitles(genreIds, mediaType) {
+    const genres = tmdbGenresCache?.[mediaType] || {};
+    const topThreeIds = genreIds.slice(0, 3); 
+    return topThreeIds
+        .map(id => genres[id]?.trim() || `未知类型(${id})`)
+        .filter(Boolean)
+        .join('•');
+}
+
+function getDoubanGenreTitles(genres) {
+    if (!genres || genres.length === 0) return "未分类";
+    const topThreeGenres = genres.slice(0, 1); 
+    return topThreeGenres.join('•');
+}
+
+
 function formatItemDescription(item) {
     let description = item.description || '';
     const hasRating = /评分|rating/i.test(description);
@@ -995,6 +1022,7 @@ function formatItemDescription(item) {
         .trim();
 }
 
+
 function createErrorItem(id, title, error) {
     const errorMessage = String(error?.message || error || '未知错误');
     const uniqueId = `error-${id.replace(/[^a-zA-Z0-9]/g, '-')}-${Date.now()}`;
@@ -1005,6 +1033,7 @@ function createErrorItem(id, title, error) {
         description: `错误详情：${errorMessage}`
     };
 }
+
 
 function calculatePagination(params) {
     let page = parseInt(params.page) || 1;
@@ -1021,18 +1050,15 @@ function calculatePagination(params) {
     return { page, limit, start };
 }
 
+
 function getBeijingDate() {
     const now = new Date();
-    
     const beijingTime = now.getTime() + (8 * 60 * 60 * 1000);
     const beijingDate = new Date(beijingTime);
-    
-    const year = beijingDate.getUTCFullYear();
-    const month = String(beijingDate.getUTCMonth() + 1).padStart(2, '0');
-    const day = String(beijingDate.getUTCDate()).padStart(2, '0');
-    
-    return `${year}-${month}-${day}`;
+    return `${beijingDate.getUTCFullYear()}-${String(beijingDate.getUTCMonth() + 1).padStart(2, '0')}-${String(beijingDate.getUTCDate()).padStart(2, '0')}`;
 }
+
+
 // ===============豆瓣功能函数===============
 async function loadDoubanCardItems(params = {}) {
   try {
@@ -1129,6 +1155,7 @@ async function loadDoubanDefaultList(params = {}) {
                   rating = await Widget.dom.text(ratingElementId);
                   rating = rating.trim();
               }
+              const genres = await Widget.dom.attr(titleElementId, "data-genres");
               doubanIds.push({
                   id: idMatch[1],
                   type: "douban",
@@ -1139,7 +1166,8 @@ async function loadDoubanDefaultList(params = {}) {
                       rating: rating,
                       releaseDate: item.releaseDate
                   }),
-                  rating: rating ? parseFloat(rating) : undefined
+                  rating: rating ? parseFloat(rating) : undefined,
+                  genreTitle: getDoubanGenreTitles(genres?.split(',') || [])
                 });
           } else {
              console.warn("解析豆列项时未找到 subject ID, Title:", title, "Link:", link);
@@ -1176,12 +1204,14 @@ async function loadDoubanItemsFromApi(params = {}) {
           releaseDate: item.year
       }),
       rating: item.rating?.value,
-      releaseDate: item.year
+      releaseDate: item.year,
+      genreTitle: getDoubanGenreTitles(item.genres || [])
     }));
     return doubanIds;
   }
   return [];
 }
+
 
 async function loadDoubanSubjectCollection(params = {}) {
   const listIdMatch = params.url.match(/subject_collection\/(\w+)/);
@@ -1259,7 +1289,8 @@ async function loadDoubanRecommendItems(params = {}, mediaType = "movie") {
         releaseDate: releaseYear ? `${releaseYear}-01-01` : undefined
       }),
       rating: rating,
-      releaseDate: releaseYear ? `${releaseYear}-01-01` : undefined
+      releaseDate: releaseYear ? `${releaseYear}-01-01` : undefined,
+      genreTitle: getDoubanGenreTitles(item.genres || [])
     };
   });
 }
@@ -1267,30 +1298,27 @@ async function loadDoubanRecommendItems(params = {}, mediaType = "movie") {
 //===============TMDB功能函数===============
 async function fetchTmdbData(api, params) {
     try {
-        const response = await Widget.tmdb.get(api, { params: params });
+        const [data, genres] = await Promise.all([
+            Widget.tmdb.get(api, { params: params }),
+            fetchTmdbGenres()
+        ]);
 
-        if (!response) {
+        if (!data?.results) {
             throw new Error("获取数据失败");
         }
 
-        const data = response.results;
-        
-        return data
+        return data.results
             .filter(item => {
                 const hasPoster = item.poster_path;
                 const hasTitle = item.title || item.name;
                 const hasValidId = Number.isInteger(item.id);
-                
                 return hasPoster && hasTitle && hasValidId;
             })
             .map((item) => {
-                let mediaType = item.media_type;
-                
-                if (!mediaType) {
-                    if (item.title) mediaType = "movie";
-                    else if (item.name) mediaType = "tv";
-                }
-                
+                const mediaType = item.media_type || (item.title ? 'movie' : 'tv');
+                const genreIds = item.genre_ids || [];
+                const genreTitle = getTmdbGenreTitles(genreIds, mediaType);
+
                 return {
                     id: item.id,
                     type: "tmdb",
@@ -1300,7 +1328,8 @@ async function fetchTmdbData(api, params) {
                     backdropPath: item.backdrop_path,
                     posterPath: item.poster_path,
                     rating: item.vote_average,
-                    mediaType: mediaType || "unknown",
+                    mediaType: mediaType,
+                    genreTitle: genreTitle
                 };
             });
     } catch (error) {
@@ -1309,20 +1338,48 @@ async function fetchTmdbData(api, params) {
     }
 }
 
-
 async function tmdbNowPlaying(params) {
     const type = params.type || 'movie';
     const api = type === 'movie' ? "movie/now_playing" : "tv/on_the_air";
     return await fetchTmdbData(api, params);
 }
 
-async function tmdbTrending(params) {
-  const timeWindow = params.time_window;
-  const api = `trending/all/${timeWindow}`;
-  delete params.time_window;
-  return await fetchTmdbData(api, params);
+async function loadTmdbTrendingData() {
+    const response = await Widget.http.get("https://raw.githubusercontent.com/quantumultxx/ForwardWidgets/refs/heads/main/Widgets/TMDB_Trending.json");
+    return response.data;
 }
 
+async function loadTodayGlobalMedia() {
+    const data = await loadTmdbTrendingData();
+    return data.today_global.map(item => ({
+        id: item.id.toString(),
+        type: "tmdb",
+        title: item.title,
+        genreTitle: item.genreTitle,
+        rating: item.rating,
+        description: item.overview,
+        releaseDate: item.release_date,
+        posterPath: item.poster_url,
+        backdropPath: item.title_backdrop,
+        mediaType: item.type,
+    }));
+}
+
+async function loadWeekGlobalMovies(params) {
+    const data = await loadTmdbTrendingData();
+    return data.week_global_all.map(item => ({
+        id: item.id.toString(),
+        type: "tmdb",
+        title: item.title,
+        genreTitle: item.genreTitle,
+        rating: item.rating,
+        description: item.overview,
+        releaseDate: item.release_date,
+        posterPath: item.poster_url,
+        backdropPath: item.title_backdrop,
+        mediaType: item.type,
+    }));
+}
 
 async function tmdbTopRated(params) {
     const type = params.type || 'movie';
@@ -1383,6 +1440,7 @@ async function tmdbDiscoverByNetwork(params = {}) {
     return await fetchTmdbData(api, discoverParams);
 }
 
+
 async function tmdbCompanies(params = {}) {
     try {
         const api = "discover/movie";
@@ -1417,6 +1475,7 @@ async function tmdbCompanies(params = {}) {
         return [createErrorItem('companies', '数据加载失败', error)];
     }
 }
+
 
 //===============IMDB功能函数===============
 async function loadImdbCardItems(params = {}) {
