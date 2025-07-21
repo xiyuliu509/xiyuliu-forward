@@ -1344,10 +1344,42 @@ async function tmdbNowPlaying(params) {
     return await fetchTmdbData(api, params);
 }
 
-async function loadTmdbTrendingData() {
-    const response = await Widget.http.get("https://raw.githubusercontent.com/quantumultxx/ForwardWidgets/refs/heads/main/Widgets/TMDB_Trending.json");
-    return response.data;
+async function fetchTmdbData(api, params = {}, forceMediaType) {
+  try {
+    const response = await Widget.tmdb.get(api, { params });
+
+    if (!response || !response.results) {
+      throw new Error("TMDB API 返回数据异常");
+    }
+
+    return response.results.map(item => {
+      const mediaType = forceMediaType || item.media_type || (item.title ? "movie" : "tv");
+      return {
+        id: item.id,
+        type: "tmdb",
+        title: item.title || item.name,
+        description: item.overview,
+        releaseDate: item.release_date || item.first_air_date,
+        backdropPath: item.backdrop_path,
+        posterPath: item.poster_path,
+        rating: item.vote_average,
+        mediaType
+      };
+    });
+  } catch (err) {
+    console.error("调用 TMDB 接口失败：", err);
+    return [createErrorItem("tmdb-trending", "加载失败", err)];
+  }
 }
+
+// ✅ 新的 TMDB 趋势加载函数，替代旧版 loadTmdbTrendingData
+async function loadTmdbTrendingData(params = {}) {
+  const timeWindow = params.time_window || "day"; // 支持 day 或 week
+  const api = `trending/all/${timeWindow}`;
+  delete params.time_window;
+  return await fetchTmdbData(api, params);
+}
+
 
 async function loadTodayGlobalMedia() {
     const data = await loadTmdbTrendingData();
