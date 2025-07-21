@@ -2,15 +2,15 @@
 // @name         影视聚合查询组件
 // @version      1.2.9
 // @description  聚合查询豆瓣/TMDB/IMDB/BGM影视数据
-// @author       阿米诺斯(原作者)，经二次优化图标后
+// @author       阿米诺斯
 // =============UserScript=============
 WidgetMetadata = {
-  id: "Aggregation_list",
+  id: "forward.combined.media.lists",
   title: "影视榜单",
   description: "聚合豆瓣、TMDB、IMDB和Bangumi的影视动画榜单",
-  author: "𝕏𝕚𝕪𝕦𝕝𝕚𝕦",
-  site: "https://github.com/xiyuliu509/xiyuliu-forward",
-  version: "1.0.2",
+  author: "阿米诺斯",
+  site: "",
+  version: "1.2.9",
   requiredVersion: "0.0.1",
   detailCacheDuration: 60,
   modules: [
@@ -28,7 +28,7 @@ WidgetMetadata = {
           type: "constant", 
           value: "https://m.douban.com/rexxar/api/v2/subject_collection/movie_real_time_hotest/items" },
         { name: "type", 
-          title: "🗂 类型", 
+          title: "🎭 类型", 
           type: "constant", 
           value: "movie" },
         { name: "page", title: "页码", type: "page" },
@@ -47,7 +47,7 @@ WidgetMetadata = {
           type: "constant", 
           value: "https://m.douban.com/rexxar/api/v2/subject_collection/tv_real_time_hotest/items" },
         { name: "type", 
-          title: "🗂 类型", 
+          title: "🎭 类型", 
           type: "constant", 
           value: "tv" },
         { name: "page", title: "页码", type: "page" },
@@ -55,7 +55,7 @@ WidgetMetadata = {
       ]
     },
 
-    // --- 🌌 精选榜单 ---
+    // --- 🏆 精选榜单 ---
     {
       title: "豆瓣 Top 250 电影",
       description: "豆瓣评分最高的 250 部电影",
@@ -138,7 +138,7 @@ WidgetMetadata = {
         },
         {
           name: "tags", 
-          title: "🗂 类型", 
+          title: "🎭 类型", 
           type: "enumeration",
           value: "",
           belongTo: {
@@ -201,7 +201,7 @@ WidgetMetadata = {
       params: [
         {
           name: "type", 
-          title: "🗂 类型", 
+          title: "🎭 类型", 
           type: "enumeration",
           enumOptions: [
             { title: "综合", value: "tv" }, 
@@ -230,7 +230,7 @@ WidgetMetadata = {
         params: [
             { 
                 name: "type", 
-                title: "🗂类型", 
+                title: "🎭类型", 
                 type: "enumeration", 
                 enumOptions: [
                     { title: "电影", value: "movie" },
@@ -272,7 +272,7 @@ WidgetMetadata = {
         params: [
             { 
                 name: "type", 
-                title: "🗂类型", 
+                title: "🎭类型", 
                 type: "enumeration", 
                 enumOptions: [
                     { title: "电影", value: "movie" },
@@ -332,7 +332,7 @@ WidgetMetadata = {
             },
             {
                 name: "with_genres",
-                title: "🗂内容类型",
+                title: "🎭内容类型",
                 type: "enumeration",
                 description: "选择要筛选的内容类型",
                 value: "",
@@ -425,7 +425,7 @@ WidgetMetadata = {
         },
         {
           name: "with_genres",
-          title: "🗂内容类型",
+          title: "🎭内容类型",
           type: "enumeration",
           description: "选择要筛选的内容类型",
           value: "",
@@ -527,7 +527,7 @@ WidgetMetadata = {
             },
             { 
                 name: "with_genres", 
-                title: "🗂类型筛选", 
+                title: "🎭类型筛选", 
                 type: "enumeration", 
                 description: "选择电影类型", 
                 value: "",
@@ -1342,34 +1342,6 @@ async function tmdbNowPlaying(params) {
     const type = params.type || 'movie';
     const api = type === 'movie' ? "movie/now_playing" : "tv/on_the_air";
     return await fetchTmdbData(api, params);
-}
-
-async function fetchTmdbData(api, params = {}, forceMediaType) {
-  try {
-    const response = await Widget.tmdb.get(api, { params });
-
-    if (!response || !response.results) {
-      throw new Error("TMDB API 返回数据异常");
-    }
-
-    return response.results.map(item => {
-      const mediaType = forceMediaType || item.media_type || (item.title ? "movie" : "tv");
-      return {
-        id: item.id,
-        type: "tmdb",
-        title: item.title || item.name,
-        description: item.overview,
-        releaseDate: item.release_date || item.first_air_date,
-        backdropPath: item.backdrop_path,
-        posterPath: item.poster_path,
-        rating: item.vote_average,
-        mediaType
-      };
-    });
-  } catch (err) {
-    console.error("调用 TMDB 接口失败：", err);
-    return [createErrorItem("tmdb-trending", "加载失败", err)];
-  }
 }
 
 async function loadTmdbTrendingData() {
@@ -3367,55 +3339,4 @@ async function fetchBangumiTagPage_bg(params = {}) {
         console.error(`${CONSTANTS_bg.LOG_PREFIX_GENERAL} [模式] fetchBangumiTagPage_bg(标签:'${tagKeyword}', 排序:${sort}, 页:${page}) 发生顶层错误:`, error.message, error.stack);
         return [];
     }
-}
-
-// ✅ 修复后的 TMDB 数据加载模块与调用逻辑
-
-// -- fetchTmdbData: 调用 TMDB API 并格式化结果
-async function fetchTmdbData(api, params = {}, forceMediaType) {
-  try {
-    const response = await Widget.tmdb.get(api, { params });
-
-    if (!response || !response.results) {
-      throw new Error("TMDB API 返回数据异常");
-    }
-
-    return response.results.map(item => {
-      const mediaType = forceMediaType || item.media_type || (item.title ? "movie" : "tv");
-      return {
-        id: item.id,
-        type: "tmdb",
-        title: item.title || item.name,
-        description: item.overview,
-        releaseDate: item.release_date || item.first_air_date,
-        backdropPath: item.backdrop_path,
-        posterPath: item.poster_path,
-        rating: item.vote_average,
-        mediaType
-      };
-    });
-  } catch (err) {
-    console.error("调用 TMDB 接口失败：", err);
-    return [createErrorItem("tmdb-trending", "加载失败", err)];
-  }
-}
-
-// -- 通用 TMDB 趋势数据加载方法
-async function loadTmdbTrendingData(params = {}) {
-  const timeWindow = params.time_window || "day";
-  const api = `trending/all/${timeWindow}`;
-  delete params.time_window;
-  return await fetchTmdbData(api, params);
-}
-
-// -- 今日热门（从 trending/all/day 获取）
-async function loadTodayGlobalMedia(params = {}) {
-  params.time_window = "day";
-  return await loadTmdbTrendingData(params);
-}
-
-// -- 本周热门（从 trending/all/week 获取）
-async function loadWeekGlobalMovies(params = {}) {
-  params.time_window = "week";
-  return await loadTmdbTrendingData(params);
 }
