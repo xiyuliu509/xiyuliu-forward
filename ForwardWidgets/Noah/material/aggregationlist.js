@@ -2,15 +2,15 @@
 // @name         影视聚合查询组件
 // @version      1.2.9
 // @description  聚合查询豆瓣/TMDB/IMDB/BGM影视数据
-// @author       阿米诺斯
+// @author       阿米诺斯(原作者)，经二次优化图标后
 // =============UserScript=============
 WidgetMetadata = {
-  id: "forward.combined.media.lists",
+  id: "Aggregation_list",
   title: "影视榜单",
   description: "聚合豆瓣、TMDB、IMDB和Bangumi的影视动画榜单",
-  author: "阿米诺斯",
-  site: "",
-  version: "1.2.9",
+  author: "𝕏𝕚𝕪𝕦𝕝𝕚𝕦",
+  site: "https://github.com/xiyuliu509/xiyuliu-forward",
+  version: "1.0.3",
   requiredVersion: "0.0.1",
   detailCacheDuration: 60,
   modules: [
