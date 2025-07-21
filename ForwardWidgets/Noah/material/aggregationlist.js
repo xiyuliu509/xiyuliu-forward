@@ -1372,14 +1372,10 @@ async function fetchTmdbData(api, params = {}, forceMediaType) {
   }
 }
 
-// ✅ 新的 TMDB 趋势加载函数，替代旧版 loadTmdbTrendingData
-async function loadTmdbTrendingData(params = {}) {
-  const timeWindow = params.time_window || "day"; // 支持 day 或 week
-  const api = `trending/all/${timeWindow}`;
-  delete params.time_window;
-  return await fetchTmdbData(api, params);
+async function loadTmdbTrendingData() {
+    const response = await Widget.http.get("https://raw.githubusercontent.com/xiyuliu509/xiyuliu-forward/refs/heads/master/ForwardWidgets/Data/TMDB_Trending.json");
+    return response.data;
 }
-
 
 async function loadTodayGlobalMedia() {
     const data = await loadTmdbTrendingData();
