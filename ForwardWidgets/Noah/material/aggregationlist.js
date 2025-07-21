@@ -1344,6 +1344,33 @@ async function tmdbNowPlaying(params) {
     return await fetchTmdbData(api, params);
 }
 
+async function fetchTmdbData(api, params = {}, forceMediaType) {
+  try {
+    const response = await Widget.tmdb.get(api, { params });
+
+    if (!response || !response.results) {
+      throw new Error("TMDB API 返回数据异常");
+    }
+
+    return response.results.map(item => {
+      const mediaType = forceMediaType || item.media_type || (item.title ? "movie" : "tv");
+      return {
+        id: item.id,
+        type: "tmdb",
+        title: item.title || item.name,
+        description: item.overview,
+        releaseDate: item.release_date || item.first_air_date,
+        backdropPath: item.backdrop_path,
+        posterPath: item.poster_path,
+        rating: item.vote_average,
+        mediaType
+      };
+    });
+  } catch (err) {
+    console.error("调用 TMDB 接口失败：", err);
+    return [createErrorItem("tmdb-trending", "加载失败", err)];
+  }
+}
 
 // ✅ 新的 TMDB 趋势加载函数，替代旧版 loadTmdbTrendingData
 async function loadTmdbTrendingData(params = {}) {
@@ -3344,4 +3371,55 @@ async function fetchBangumiTagPage_bg(params = {}) {
         console.error(`${CONSTANTS_bg.LOG_PREFIX_GENERAL} [模式] fetchBangumiTagPage_bg(标签:'${tagKeyword}', 排序:${sort}, 页:${page}) 发生顶层错误:`, error.message, error.stack);
         return [];
     }
+}
+
+// ✅ 修复后的 TMDB 数据加载模块与调用逻辑
+
+// -- fetchTmdbData: 调用 TMDB API 并格式化结果
+async function fetchTmdbData(api, params = {}, forceMediaType) {
+  try {
+    const response = await Widget.tmdb.get(api, { params });
+
+    if (!response || !response.results) {
+      throw new Error("TMDB API 返回数据异常");
+    }
+
+    return response.results.map(item => {
+      const mediaType = forceMediaType || item.media_type || (item.title ? "movie" : "tv");
+      return {
+        id: item.id,
+        type: "tmdb",
+        title: item.title || item.name,
+        description: item.overview,
+        releaseDate: item.release_date || item.first_air_date,
+        backdropPath: item.backdrop_path,
+        posterPath: item.poster_path,
+        rating: item.vote_average,
+        mediaType
+      };
+    });
+  } catch (err) {
+    console.error("调用 TMDB 接口失败：", err);
+    return [createErrorItem("tmdb-trending", "加载失败", err)];
+  }
+}
+
+// -- 通用 TMDB 趋势数据加载方法
+async function loadTmdbTrendingData(params = {}) {
+  const timeWindow = params.time_window || "day";
+  const api = `trending/all/${timeWindow}`;
+  delete params.time_window;
+  return await fetchTmdbData(api, params);
+}
+
+// -- 今日热门（从 trending/all/day 获取）
+async function loadTodayGlobalMedia(params = {}) {
+  params.time_window = "day";
+  return await loadTmdbTrendingData(params);
+}
+
+// -- 本周热门（从 trending/all/week 获取）
+async function loadWeekGlobalMovies(params = {}) {
+  params.time_window = "week";
+  return await loadTmdbTrendingData(params);
 }
