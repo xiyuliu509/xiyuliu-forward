@@ -9,7 +9,7 @@ WidgetMetadata = {
   title: "影视榜单",
   description: "聚合豆瓣、TMDB、IMDB和Bangumi的影视动画榜单",
   author: "阿米诺斯",
-  site: "",
+  site: "https://github.com/opix-maker/Forward",
   version: "1.3.0",
   requiredVersion: "0.0.1",
   detailCacheDuration: 60,
