@@ -285,16 +285,23 @@ async function fetchImdbIdsFromTraktUrls(traktUrls) {
         }
     });
 
-    let imdbIds = [...new Set(
-        (await Promise.all(imdbIdPromises))
-            .filter(Boolean)
-            .map((item) => item)
-    )].map((id) => ({
-        id,
-        type: "imdb",
-    }));
-    console.log("请求imdbIds:", imdbIds)
-    return imdbIds;
+    const imdbIds = [...new Set((await Promise.all(imdbIdPromises)).filter(Boolean))];
+
+    const tmdbIdPromises = imdbIds.map(async (imdbId) => {
+        try {
+            const findResponse = await Widget.http.get(`https://api.themoviedb.org/3/find/${imdbId}?api_key=${TMDB_API_KEY}&external_source=imdb_id`);
+            const results = findResponse.data.movie_results.concat(findResponse.data.tv_results);
+            if (results.length > 0) {
+                return results[0];
+            }
+            return null;
+        } catch (error) {
+            console.error(`Failed to find TMDB ID for IMDB ID ${imdbId}:`, error);
+            return null;
+        }
+    });
+
+    return (await Promise.all(tmdbIdPromises)).filter(Boolean);
 }
 
 async function fetchTraktData(url, headers = {}, status, minNum, maxNum, random = false, order = "") {
@@ -354,7 +361,16 @@ async function loadInterestItems(params = {}) {
         }
 
         let url = `https://trakt.tv/users/${userName}/${status}?page=${traktPage}`;
-        return await fetchTraktData(url, {}, status, minNum, maxNum, random);
+        const traktItems = await fetchTraktData(url, {}, status, minNum, maxNum, random);
+        const localData = await getLocalTmdbData();
+
+        const mappedItems = traktItems.map(item => {
+            const localItem = localData[item.id];
+            const mergedItem = localItem ? { ...item, ...localItem } : item;
+            return tmdbItemToWidget(mergedItem, !!localItem);
+        });
+
+        return mappedItems;
     } catch (error) {
         console.error("处理失败:", error);
         throw error;
@@ -375,7 +391,16 @@ async function loadSuggestionItems(params = {}) {
         }
 
         let url = `https://trakt.tv/${type}/recommendations`;
-        return await fetchTraktData(url, {Cookie: cookie}, "", minNum, maxNum);
+        const traktItems = await fetchTraktData(url, {Cookie: cookie}, "", minNum, maxNum);
+        const localData = await getLocalTmdbData();
+
+        const mappedItems = traktItems.map(item => {
+            const localItem = localData[item.id];
+            const mergedItem = localItem ? { ...item, ...localItem } : item;
+            return tmdbItemToWidget(mergedItem, !!localItem);
+        });
+
+        return mappedItems;
     } catch (error) {
         console.error("处理失败:", error);
         throw error;
@@ -399,7 +424,16 @@ async function loadListItems(params = {}) {
         }
 
         let url = `https://trakt.tv/users/${userName}/lists/${listName}?page=${traktPage}&sort=${sortBy},${sortHow}`;
-        return await fetchTraktData(url, {}, "", minNum, maxNum);
+        const traktItems = await fetchTraktData(url, {}, "", minNum, maxNum);
+        const localData = await getLocalTmdbData();
+
+        const mappedItems = traktItems.map(item => {
+            const localItem = localData[item.id];
+            const mergedItem = localItem ? { ...item, ...localItem } : item;
+            return tmdbItemToWidget(mergedItem, !!localItem);
+        });
+
+        return mappedItems;
     } catch (error) {
         console.error("处理失败:", error);
         throw error;
@@ -426,13 +460,77 @@ async function loadCalendarItems(params = {}) {
         const startDate = new Date(today);
         startDate.setDate(today.getDate() + startDateOffset);
 
-        // Format date as YYYY-MM-DD
         const formattedStartDate = startDate.toISOString().split('T')[0];
 
         let url = `https://trakt.tv/calendars/my/shows-movies/${formattedStartDate}/${days}`;
-        return await fetchTraktData(url, {Cookie: cookie}, "", 1, 100, false, order);
+        const traktItems = await fetchTraktData(url, { Cookie: cookie }, "", 1, 100, false, order);
+
+        const localData = await getLocalTmdbData();
+
+        const mappedItems = traktItems.map(item => {
+            const localItem = localData[item.id];
+            const mergedItem = localItem ? { ...item, ...localItem } : item;
+            return tmdbItemToWidget(mergedItem, !!localItem);
+        });
+
+        return mappedItems;
     } catch (error) {
         console.error("处理失败:", error);
         throw error;
     }
+}
+
+const TMDB_API_KEY = "8139a39bae1bed1bdd06e5c200893f40";
+let localTmdbData = null;
+
+async function getLocalTmdbData() {
+    if (localTmdbData) {
+        return localTmdbData;
+    }
+    try {
+        const response = await Widget.http.get("https://raw.githubusercontent.com/xiyuliu509/xiyuliu-forward/refs/heads/master/ForwardWidgets/Data/TMDB_Trending.json");
+        const data = response.data;
+
+        const allItems = [].concat(data.today_global || [], data.week_global_all || [], Array.isArray(data) ? data : []);
+
+        localTmdbData = {};
+        for (const item of allItems) {
+            if(item.id) {
+               localTmdbData[item.id] = item;
+            }
+        }
+        return localTmdbData;
+    } catch (error) {
+        console.error("Failed to load local TMDB data from URL:", error);
+        return {};
+    }
+}
+
+function tmdbItemToWidget(item, isLocal) {
+  const posterPath = item.poster_path || item.poster_url;
+  const backdropPath = item.backdrop_path || item.title_backdrop;
+  const mediaType = item.media_type || item.type;
+  const overview = item.overview || '';
+
+  return {
+    id: item.id,
+    title: item.title || item.name,
+    type: mediaType,
+    image: `https://image.tmdb.org/t/p/w500${posterPath}`,
+    description: isLocal ? item.genreTitle : (item.release_date || item.first_air_date || ''),
+    rating: {
+      value: item.vote_average ? item.vote_average.toFixed(1) : 'N/A',
+      max: 10
+    },
+    properties: [
+      { name: "媒体类型", value: mediaType === 'movie' ? '电影' : '剧集' },
+      { name: "发布日期", value: item.release_date || item.first_air_date || '未知' },
+      { name: "TMDB ID", value: String(item.id) }
+    ],
+    summary: overview.substring(0, 150) + (overview.length > 150 ? '...' : ''),
+    cover: `https://image.tmdb.org/t/p/original${backdropPath}`,
+    actions: [
+      { type: 'copy', value: `https://www.themoviedb.org/${mediaType}/${item.id}` }
+    ]
+  };
 }
