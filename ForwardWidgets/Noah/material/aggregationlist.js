@@ -2,15 +2,15 @@
 // @name         影视聚合查询组件
 // @version      1.2.9
 // @description  聚合查询豆瓣/TMDB/IMDB/BGM影视数据
-// @author       阿米诺斯(原作者)，经二次优化图标后
+// @author       阿米诺斯
 // =============UserScript=============
 WidgetMetadata = {
-  id: "Aggregation_list",
+  id: "forward.combined.media.lists",
   title: "影视榜单",
   description: "聚合豆瓣、TMDB、IMDB和Bangumi的影视动画榜单",
-  author: "𝕏𝕚𝕪𝕦𝕝𝕚𝕦",
-  site: "https://github.com/xiyuliu509/xiyuliu-forward",
-  version: "1.0.3",
+  author: "阿米诺斯",
+  site: "",
+  version: "1.2.9",
   requiredVersion: "0.0.1",
   detailCacheDuration: 60,
   modules: [
@@ -246,9 +246,10 @@ WidgetMetadata = {
       title: "TMDB 今日热门",
       description: "今日热门电影与剧集",
       requiresWebView: false,
-      functionName: "loadTodayGlobalMedia",
-      cacheDuration: 60,
+      functionName: "loadTmdbTrending",
+      cacheDuration: 3600, // 1 hour
       params: [
+        { name: "time_window", type: "constant", value: "day" },
         { name: "language", title: "语言", type: "language", value: "zh-CN" }
       ]
     },
@@ -256,9 +257,10 @@ WidgetMetadata = {
       title: "TMDB 本周热门",
       description: "本周热门电影与剧集",
       requiresWebView: false,
-      functionName: "loadWeekGlobalMovies",
-      cacheDuration: 60,
+      functionName: "loadTmdbTrending",
+      cacheDuration: 3600, // 1 hour
       params: [
+        { name: "time_window", type: "constant", value: "week" },
         { name: "language", title: "语言", type: "language", value: "zh-CN" }
       ]
     },
@@ -962,6 +964,69 @@ WidgetMetadata = {
   ]
 };
 
+// =============TMDB模块辅助函数=============
+const TMDB_API_KEY = "8139a39bae1bed1bdd06e5c200893f40"; // 在这里填入你的TMDB API Key
+
+let localTmdbData = null;
+
+async function getLocalTmdbData() {
+    if (localTmdbData) {
+        return localTmdbData;
+    }
+    try {
+        const response = await fetch('TMDB_Trending.json');
+        const data = await response.json();
+        const allItems = [].concat(data.today_global || [], data.week_global_all || []);
+        
+        localTmdbData = {};
+        for (const item of allItems) {
+            localTmdbData[item.id] = item;
+        }
+        return localTmdbData;
+    } catch (error) {
+        console.error("Failed to load local TMDB data:", error);
+        return {};
+    }
+}
+
+async function loadTmdbTrending(params) {
+    if (!TMDB_API_KEY) {
+        throw new Error("请在脚本中填入您的TMDB API Key");
+    }
+
+    const { time_window, language, page = 1 } = params;
+    const apiUrl = `https://api.themoviedb.org/3/trending/all/${time_window}?api_key=${TMDB_API_KEY}&language=${language}&page=${page}`;
+
+    const [apiResponse, localData] = await Promise.all([
+        fetch(apiUrl),
+        getLocalTmdbData()
+    ]);
+
+    if (!apiResponse.ok) {
+        throw new Error(`Failed to fetch data from TMDB API: ${apiResponse.statusText}`);
+    }
+
+    const apiData = await apiResponse.json();
+
+    const mergedItems = apiData.results.map(apiItem => {
+        const localItem = localData[apiItem.id];
+        if (localItem) {
+            return {
+                ...apiItem,
+                title: localItem.title || apiItem.title || apiItem.name,
+                overview: localItem.overview || apiItem.overview,
+                poster_path: localItem.poster_url ? localItem.poster_url.replace('https://image.tmdb.org/t/p/original', '') : apiItem.poster_path,
+                backdrop_path: localItem.title_backdrop ? localItem.title_backdrop.replace('https://image.tmdb.org/t/p/original', '') : apiItem.backdrop_path,
+                release_date: localItem.release_date || apiItem.release_date,
+                media_type: localItem.type || apiItem.media_type,
+            };
+        }
+        return apiItem;
+    });
+
+    return mergedItems.map(item => tmdbItemToWidget(item, language));
+}
+
 // ===============辅助函数===============
 let tmdbGenresCache = null;
 
@@ -1338,6 +1403,35 @@ async function fetchTmdbData(api, params) {
     }
 }
 
+function tmdbItemToWidget(item, language) {
+    const id = item.id;
+    const title = item.title || item.name;
+    const overview = item.overview;
+    const posterPath = item.poster_path ? `https://image.tmdb.org/t/p/w500${item.poster_path}` : '';
+    const backdropPath = item.backdrop_path ? `https://image.tmdb.org/t/p/original${item.backdrop_path}` : '';
+    const releaseDate = item.release_date || item.first_air_date;
+    const voteAverage = item.vote_average;
+    const mediaType = item.media_type;
+
+    let url;
+    if (mediaType === 'movie') {
+        url = `https://www.themoviedb.org/movie/${id}?language=${language}`;
+    } else if (mediaType === 'tv') {
+        url = `https://www.themoviedb.org/tv/${id}?language=${language}`;
+    } else {
+        url = `https://www.themoviedb.org/`;
+    }
+
+    return {
+        title: title,
+        url: url,
+        image: posterPath,
+        backdrop: backdropPath,
+        summary: `📅 ${releaseDate || 'N/A'} | ⭐️ ${voteAverage ? voteAverage.toFixed(1) : 'N/A'}`,
+        content: overview,
+    };
+}
+
 async function tmdbNowPlaying(params) {
     const type = params.type || 'movie';
     const api = type === 'movie' ? "movie/now_playing" : "tv/on_the_air";
@@ -1345,7 +1439,7 @@ async function tmdbNowPlaying(params) {
 }
 
 async function loadTmdbTrendingData() {
-    const response = await Widget.http.get("https://raw.githubusercontent.com/xiyuliu509/xiyuliu-forward/refs/heads/master/ForwardWidgets/Data/TMDB_Trending.json");
+    const response = await Widget.http.get("https://raw.githubusercontent.com/quantumultxx/ForwardWidgets/refs/heads/main/data/TMDB_Trending.json");
     return response.data;
 }
 
