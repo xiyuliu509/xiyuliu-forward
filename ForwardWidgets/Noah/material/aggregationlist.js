@@ -5,7 +5,7 @@
 // @author       阿米诺斯
 // =============UserScript=============
 WidgetMetadata = {
-  id: "forward.combined.media.lists",
+  id: "Aggregation_list",
   title: "影视榜单",
   description: "聚合豆瓣、TMDB、IMDB和Bangumi的影视动画榜单",
   author: "阿米诺斯",
