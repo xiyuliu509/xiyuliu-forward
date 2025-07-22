@@ -200,7 +200,7 @@ WidgetMetadata = {
             ],
         },
     ],
-    version: "1.0.2",
+    version: "1.0.1",
     requiredVersion: "0.0.1",
     description: "获取Trakt在看、片单并进行个性化推荐",
     author: "𝕏𝕚𝕪𝕦𝕝𝕚𝕦",
@@ -289,10 +289,27 @@ async function fetchImdbIdsFromTraktUrls(traktUrls) {
 
     const tmdbIdPromises = imdbIds.map(async (imdbId) => {
         try {
-            const findResponse = await Widget.http.get(`https://api.themoviedb.org/3/find/${imdbId}?api_key=${TMDB_API_KEY}&external_source=imdb_id`);
-            const results = findResponse.data.movie_results.concat(findResponse.data.tv_results);
-            if (results.length > 0) {
-                return results[0];
+            // 1. Fetch with Chinese language preference
+            const findResponseZh = await Widget.http.get(`https://api.themoviedb.org/3/find/${imdbId}?api_key=${TMDB_API_KEY}&external_source=imdb_id&language=zh-CN`);
+            const resultsZh = findResponseZh.data.movie_results.concat(findResponseZh.data.tv_results);
+
+            if (resultsZh.length > 0) {
+                let result = resultsZh[0];
+
+                // 2. Check if image paths are missing
+                if (!result.poster_path || !result.backdrop_path) {
+                    // 3. Fetch with default language to get images
+                    const findResponseEn = await Widget.http.get(`https://api.themoviedb.org/3/find/${imdbId}?api_key=${TMDB_API_KEY}&external_source=imdb_id`);
+                    const resultsEn = findResponseEn.data.movie_results.concat(findResponseEn.data.tv_results);
+
+                    if (resultsEn.length > 0) {
+                        const enResult = resultsEn[0];
+                        // 4. Merge results: prioritize Chinese text, but use English images if Chinese ones are missing
+                        result.poster_path = result.poster_path || enResult.poster_path;
+                        result.backdrop_path = result.backdrop_path || enResult.backdrop_path;
+                    }
+                }
+                return result;
             }
             return null;
         } catch (error) {
