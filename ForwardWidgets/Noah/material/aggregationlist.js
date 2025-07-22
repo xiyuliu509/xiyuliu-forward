@@ -250,7 +250,8 @@ WidgetMetadata = {
       cacheDuration: 3600, // 1 hour
       params: [
         { name: "time_window", type: "constant", value: "day" },
-        { name: "language", title: "语言", type: "language", value: "zh-CN" }
+        { name: "language", title: "语言", type: "language", value: "zh-CN" },
+        { name: "limit", title: "数量", type: "constant", value: "10" }
       ]
     },
     {
@@ -261,7 +262,8 @@ WidgetMetadata = {
       cacheDuration: 3600, // 1 hour
       params: [
         { name: "time_window", type: "constant", value: "week" },
-        { name: "language", title: "语言", type: "language", value: "zh-CN" }
+        { name: "language", title: "语言", type: "language", value: "zh-CN" },
+        { name: "limit", title: "数量", type: "constant", value: "10" }
       ]
     },
     // --- 常规发现模块 ---
@@ -964,6 +966,79 @@ WidgetMetadata = {
   ]
 };
 
+
+async function getLocalTmdbData(type) {
+  const url = `https://ghproxy.com/https://raw.githubusercontent.com/czy13724/Quantumult-X/main/Resources/TMDB_Trending.json`;
+  try {
+    const response = await http.get(url);
+    if (response.data && response.data[type]) {
+      return response.data[type];
+    }
+  } catch (error) {
+    console.error(`获取本地TMDB数据失败: ${type}`, error);
+  }
+  return [];
+}
+
+async function loadTmdbTrending(params) {
+  if (!TMDB_API_KEY || TMDB_API_KEY === "8139a39bae1bed1bdd06e5c200893f40") {
+    throw new Error("请在脚本中填入有效的TMDB API Key");
+  }
+
+  const timeWindow = params.time_window || 'day';
+  const localDataKey = timeWindow === 'day' ? 'today_global' : 'week_global_all';
+  const localData = await getLocalTmdbData(localDataKey);
+  const localDataMap = new Map(localData.map(item => [item.id, item]));
+
+  const url = `https://api.themoviedb.org/3/trending/all/${timeWindow}?api_key=${TMDB_API_KEY}&language=zh-CN`;
+  const response = await http.get(url);
+  if (!response.data || !response.data.results) {
+    throw new Error("从TMDB API获取数据失败");
+  }
+
+  const onlineData = response.data.results;
+
+  const mergedData = onlineData.map(item => {
+    const localItem = localDataMap.get(item.id);
+    if (localItem) {
+      return tmdbItemToWidget(localItem, true);
+    } else {
+      return tmdbItemToWidget(item, false);
+    }
+  });
+
+  return mergedData;
+}
+
+function tmdbItemToWidget(item, isLocal) {
+  const posterPath = item.poster_path || item.poster_url;
+  const backdropPath = item.backdrop_path || item.title_backdrop;
+  const mediaType = item.media_type || item.type;
+  const overview = item.overview || '';
+
+  return {
+    id: item.id,
+    title: item.title || item.name,
+    type: mediaType,
+    image: `https://image.tmdb.org/t/p/w500${posterPath}`,
+    description: isLocal ? item.genreTitle : (item.release_date || item.first_air_date || ''),
+    rating: {
+      value: item.vote_average ? item.vote_average.toFixed(1) : 'N/A',
+      max: 10
+    },
+    properties: [
+      { name: "媒体类型", value: mediaType === 'movie' ? '电影' : '剧集' },
+      { name: "发布日期", value: item.release_date || item.first_air_date || '未知' },
+      { name: "TMDB ID", value: String(item.id) }
+    ],
+    summary: overview.substring(0, 150) + (overview.length > 150 ? '...' : ''),
+    cover: `https://image.tmdb.org/t/p/original${backdropPath}`,
+    actions: [
+      { type: 'copy', value: `https://www.themoviedb.org/${mediaType}/${item.id}` }
+    ]
+  };
+}
+
 // =============TMDB模块辅助函数=============
 const TMDB_API_KEY = "8139a39bae1bed1bdd06e5c200893f40"; // 在这里填入你的TMDB API Key
 
@@ -974,13 +1049,25 @@ async function getLocalTmdbData() {
         return localTmdbData;
     }
     try {
-        const response = await fetch('TMDB_Trending.json');
-        const data = await response.json();
-        const allItems = [].concat(data.today_global || [], data.week_global_all || []);
-        
+        // The file path should be relative to the script's execution context.
+        // Assuming 'TMDB_Trending.json' is in the same directory or accessible.
+        const fm = FileManager.local();
+        const path = fm.joinPath(fm.documentsDirectory(), 'TMDB_Trending.json');
+        if (!fm.fileExists(path)) {
+            console.log("Local TMDB data file not found, skipping.");
+            return {};
+        }
+        const jsonStr = fm.readString(path);
+        const data = JSON.parse(jsonStr);
+
+        // Assuming the new structure is a single array of items
+        const allItems = data.today_global || data.week_global_all || (Array.isArray(data) ? data : []);
+
         localTmdbData = {};
         for (const item of allItems) {
-            localTmdbData[item.id] = item;
+            if(item.id) {
+               localTmdbData[item.id] = item;
+            }
         }
         return localTmdbData;
     } catch (error) {
@@ -994,7 +1081,7 @@ async function loadTmdbTrending(params) {
         throw new Error("请在脚本中填入您的TMDB API Key");
     }
 
-    const { time_window, language, page = 1 } = params;
+    const { time_window, language, page = 1, limit = 20 } = params;
     const apiUrl = `https://api.themoviedb.org/3/trending/all/${time_window}?api_key=${TMDB_API_KEY}&language=${language}&page=${page}`;
 
     const [apiResponse, localData] = await Promise.all([
@@ -1024,7 +1111,8 @@ async function loadTmdbTrending(params) {
         return apiItem;
     });
 
-    return mergedItems.map(item => tmdbItemToWidget(item, language));
+    const mappedItems = mergedItems.map(item => tmdbItemToWidget(item, language));
+    return mappedItems.slice(0, limit);
 }
 
 // ===============辅助函数===============
@@ -1439,7 +1527,7 @@ async function tmdbNowPlaying(params) {
 }
 
 async function loadTmdbTrendingData() {
-    const response = await Widget.http.get("https://raw.githubusercontent.com/xiyuliu509/xiyuliu-forward/refs/heads/master/ForwardWidgets/Data/TMDB_Trending.json");
+        const response = await Widget.http.get("https://raw.githubusercontent.com/xiyuliu509/xiyuliu-forward/refs/heads/master/ForwardWidgets/Data/TMDB_Trending.json");
     return response.data;
 }
 
