@@ -10,7 +10,7 @@ WidgetMetadata = {
   description: "聚合豆瓣、TMDB、IMDB和Bangumi的影视动画榜单",
   author: "阿米诺斯",
   site: "",
-  version: "1.2.9",
+  version: "1.3.0",
   requiredVersion: "0.0.1",
   detailCacheDuration: 60,
   modules: [
@@ -1098,14 +1098,21 @@ async function loadTmdbTrending(params) {
     const mergedItems = apiData.results.map(apiItem => {
         const localItem = localData[apiItem.id];
         if (localItem) {
+            // Deep merge localItem over apiItem, giving priority to local data
             return {
-                ...apiItem,
+                ...apiItem, // Start with API data as a base
+                ...localItem, // Override with local data
+                // Ensure essential fields from apiItem are kept if not in localItem
+                id: apiItem.id, 
+                // Fields from localItem will overwrite apiItem's fields
                 title: localItem.title || apiItem.title || apiItem.name,
                 overview: localItem.overview || apiItem.overview,
                 poster_path: localItem.poster_url ? localItem.poster_url.replace('https://image.tmdb.org/t/p/original', '') : apiItem.poster_path,
                 backdrop_path: localItem.title_backdrop ? localItem.title_backdrop.replace('https://image.tmdb.org/t/p/original', '') : apiItem.backdrop_path,
-                release_date: localItem.release_date || apiItem.release_date,
+                release_date: localItem.release_date || apiItem.release_date || apiItem.first_air_date,
                 media_type: localItem.type || apiItem.media_type,
+                vote_average: localItem.rating || apiItem.vote_average,
+                genre_ids: apiItem.genre_ids // Keep genre_ids from API for consistency
             };
         }
         return apiItem;
