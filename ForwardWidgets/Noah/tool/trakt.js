@@ -1,4 +1,4 @@
-// trakt组件，搬运自大佬“huangxd”
+// trakt组件1.0.2，搬运自大佬“huangxd”
 WidgetMetadata = {
     id: "Trakt",
     title: "Trakt我看&Trakt个性化推荐",
