@@ -200,7 +200,7 @@ WidgetMetadata = {
             ],
         },
     ],
-    version: "1.0.1",
+    version: "1.0.2",
     requiredVersion: "0.0.1",
     description: "获取Trakt在看、片单并进行个性化推荐",
     author: "𝕏𝕚𝕪𝕦𝕝𝕚𝕦",
