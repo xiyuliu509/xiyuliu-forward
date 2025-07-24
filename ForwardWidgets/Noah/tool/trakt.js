@@ -1,5 +1,4 @@
-// trakt组件1.0.2，搬运自“huangxd”
-
+// trakt组件1.0.3，搬运自大佬“huangxd”
 WidgetMetadata = {
     id: "Trakt",
     title: "Trakt我看&Trakt个性化推荐",
@@ -201,7 +200,7 @@ WidgetMetadata = {
             ],
         },
     ],
-    version: "1.0.2",
+    version: "1.0.3",
     requiredVersion: "0.0.1",
     description: "获取Trakt在看、片单并进行个性化推荐",
     author: "𝕏𝕚𝕪𝕦𝕝𝕚𝕦",
@@ -525,30 +524,33 @@ async function getLocalTmdbData() {
 }
 
 function tmdbItemToWidget(item, isLocal) {
-  const posterPath = item.poster_path || item.poster_url;
-  const backdropPath = item.backdrop_path || item.title_backdrop;
-  const mediaType = item.media_type || item.type;
-  const overview = item.overview || '';
+    const posterPath = item.poster_path || item.poster_url;
+    const backdropPath = item.backdrop_path || item.title_backdrop;
+    const mediaType = item.media_type || item.type;
+    const overview = item.overview || '';
 
-  return {
-    id: item.id,
-    title: item.title || item.name,
-    type: mediaType,
-    image: `https://image.tmdb.org/t/p/w500${posterPath}`,
-    description: isLocal ? item.genreTitle : (item.release_date || item.first_air_date || ''),
-    rating: {
-      value: item.vote_average ? item.vote_average.toFixed(1) : 'N/A',
-      max: 10
-    },
-    properties: [
-      { name: "媒体类型", value: mediaType === 'movie' ? '电影' : '剧集' },
-      { name: "发布日期", value: item.release_date || item.first_air_date || '未知' },
-      { name: "TMDB ID", value: String(item.id) }
-    ],
-    summary: overview.substring(0, 150) + (overview.length > 150 ? '...' : ''),
-    cover: `https://image.tmdb.org/t/p/original${backdropPath}`,
-    actions: [
-      { type: 'copy', value: `https://www.themoviedb.org/${mediaType}/${item.id}` }
-    ]
-  };
+    const posterUrl = posterPath ? (posterPath.startsWith('http') ? posterPath : `https://image.tmdb.org/t/p/w500${posterPath}`) : null;
+    const backdropUrl = backdropPath ? (backdropPath.startsWith('http') ? backdropPath : `https://image.tmdb.org/t/p/original${backdropPath}`) : null;
+
+    return {
+        id: item.id,
+        title: item.title || item.name,
+        // type: mediaType, // type 字段会导致显示问题，暂时注释
+        coverUrl: posterUrl,
+        backdropUrl: backdropUrl,
+        description: isLocal ? item.genreTitle : (item.release_date || item.first_air_date || ''),
+        rating: {
+            value: item.vote_average ? item.vote_average.toFixed(1) : (item.rating || 'N/A'),
+            max: 10
+        },
+        properties: [
+            { name: "媒体类型", value: mediaType === 'movie' ? '电影' : '剧集' },
+            { name: "发布日期", value: item.release_date || item.first_air_date || '未知' },
+            { name: "TMDB ID", value: String(item.id) }
+        ],
+        summary: overview.substring(0, 150) + (overview.length > 150 ? '...' : ''),
+        actions: [
+            { type: 'copy', value: `https://www.themoviedb.org/${mediaType}/${item.id}` }
+        ]
+    };
 }
