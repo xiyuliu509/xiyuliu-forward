@@ -1,170 +1,170 @@
 
 {
   "trakt": [
-      {
+    {
       "id": 223911,
       "title": "仙逆",
       "type": "tv",
       "genreTitle": "动作冒险•动画•剧情",
-      "rating": 10.0,
+      "rating": 10,
       "release_date": "2023-09-25",
       "overview": "改编自耳根同名小说《仙逆》，讲述了乡村平凡少年王林以心中之感动，逆仙而修，求的不仅是长生，更多的是摆脱那背后的蝼蚁之身。他坚信道在人为，以平庸的资质踏入修真仙途，历经坎坷风雨，凭着其聪睿的心智，一步一步走向巅峰，凭一己之力，扬名修真界。",
-      "poster_url": "https://image.tmdb.org/t/p/original/kuq7Ht3s2jEUEat6PFjJeOAJXIx.jpg",
-      "title_backdrop": "https://image.tmdb.org/t/p/original/6ShGWINXiFqrx6dMEhnpIRtHVIM.jpg"
-     }, 
-     {
+      "poster_path": "/kuq7Ht3s2jEUEat6PFjJeOAJXIx.jpg",
+      "backdrop_path": "/6ShGWINXiFqrx6dMEhnpIRtHVIM.jpg"
+    },
+    {
       "id": 261868,
       "title": "魔女与使魔",
       "type": "tv",
       "genreTitle": "动画•喜剧",
-      "rating": 10.0,
+      "rating": 10,
       "release_date": "2025-04-06",
       "overview": "拥有鬼之力的高中生乙木守仁，作为正在进行魔女修行的青梅竹马妮可的使魔开始同居！与青梅竹马的重逢让妮可心跳不已，而守仁肩负着作为使魔保护妮可免受预言中灾难的使命……妮可的魔法引发的不可预测的麻烦，加上正值青春期的两人同居生活……充满困难与奇妙的生活就此拉开序幕！",
-      "poster_url": "https://image.tmdb.org/t/p/original/wkTfkFeREqsR65wZ4dt1WlYPGTz.jpg",
-      "title_backdrop": "https://image.tmdb.org/t/p/original/x5SyjGLgDFMCOEOdvarCcvQEj0H.jpg"
-    },  
+      "poster_path": "/wkTfkFeREqsR65wZ4dt1WlYPGTz.jpg",
+      "backdrop_path": "/x5SyjGLgDFMCOEOdvarCcvQEj0H.jpg"
+    },
     {
       "id": 101172,
       "title": "吞噬星空",
       "type": "tv",
       "genreTitle": "动画•动作冒险",
-      "rating": 10.0,
+      "rating": 10,
       "release_date": "2020-11-29",
       "overview": "某一天，地球上出现了不明来由的RR病毒，将世界卷入灾难之中。受到感染的动物变异成为可怕的怪兽，大举入侵，人类面临毁灭之际筑起了围墙，成立基地市作为人类最后的堡垒。人类在这一段时间经历的磨难，被称为“大涅槃时期”。在极端的生存环境下，人类的体能也在逐渐地进步发展，尚武之风兴起，人类的身体素质相比以前有了质的飞越。而这其中的佼佼者，被称为“武者”。 ",
-      "poster_url": "https://image.tmdb.org/t/p/original/aYOofbnjbUQDagTNe52LvV1Yd0j.jpg",
-      "title_backdrop": "https://image.tmdb.org/t/p/original/4OxJhZ7iotRzZKm9kAqu4Ux4iVl.jpg"
-    }, 
+      "poster_path": "/aYOofbnjbUQDagTNe52LvV1Yd0j.jpg",
+      "backdrop_path": "/4OxJhZ7iotRzZKm9kAqu4Ux4iVl.jpg"
+    },
     {
       "id": 79166,
       "title": "碧蓝之海2",
       "type": "tv",
       "genreTitle": "动画•喜剧",
-      "rating": 10.0,
+      "rating": 10,
       "release_date": "2025-07-08",
       "overview": "我们的夏天不会结束！北原伊织在伊豆开始大学生活已经三个月——寄住的潜水商店[Grand Blue」里，他和可爱的表妹古手川千纱同住一个屋檐下。再加上表姊古手川奈奈华、散发成熟魅力令人难以抗拒的滨冈梓，以及同学吉原爱菜，共同度过了顺风顺水的青春校园生活！……当然这只是表面，大学生活的大半时光其实是与全裸家伙们的疯狂闹腾！因为伊织加入的潜水社团「Peek a Boo」平时潜水马马虎虎，却把健壮男子们全裸对饮的闹腾当成日常；伊织也与帅气却真正御宅族的今村耕平一起，彻底染上了这个社团的风气。就在此时，完成冲绳潜水执照课程、返回伊豆的伊织收到了妹妹・北原栞寄来的信……妹妹来袭、青梅女子大的学园祭、试胆大会、约会、无人岛露营！ 被可爱的全裸家伙们包围的伊织的大学生活再次开始！！",
-      "poster_url": "https://image.tmdb.org/t/p/original/luqItcfk4OuBk0jp30raXHSEqUG.jpg",
-      "title_backdrop": "https://image.tmdb.org/t/p/original/3OpevGrESwKy2YmdZ20tKBXRWpD.jpg"
+      "poster_path": "/luqItcfk4OuBk0jp30raXHSEqUG.jpg",
+      "backdrop_path": "/3OpevGrESwKy2YmdZ20tKBXRWpD.jpg"
     },
     {
       "id": 107371,
       "title": "一念永恒",
       "type": "tv",
       "genreTitle": "动画•剧情",
-      "rating": 10.0,
+      "rating": 10,
       "release_date": "2020-07-02",
       "overview": "平凡少年白小纯在一次次磨炼挑战中的成长变化，描绘了一个极具东方奇幻色彩的瑰丽世界。人们常说“陪伴是最长情的告白”，而每一位资深的动漫迷，都值得一个《一念永恒》这样的国漫年番“长情”的守护。",
-      "poster_url": "https://image.tmdb.org/t/p/original/rCoCSHBajeWOZnAcMqEdaOCGHVp.jpg",
-      "title_backdrop": "https://image.tmdb.org/t/p/original/sWli8Hm4fwyhZyW6y9ymclMV1Vf.jpg"
+      "poster_path": "/rCoCSHBajeWOZnAcMqEdaOCGHVp.jpg",
+      "backdrop_path": "/sWli8Hm4fwyhZyW6y9ymclMV1Vf.jpg"
     },
     {
       "id": 258348,
       "title": "克雷瓦提斯-魔兽之王与婴儿与尸之勇者",
       "type": "tv",
       "genreTitle": "动画•动作冒险•剧情",
-      "rating": 10.0,
+      "rating": 10,
       "release_date": "2025-07-02",
       "overview": "阿莉西亚从小就向往着成为勇者，最终被国王选中成为13名勇者之一。勇者们带着传说中的宝剑前去讨伐魔兽王克雷瓦提斯。但如此鲁莽的举动，为艾多西亚大陆的人族惹来了可能导致灭绝的危机。全世界的唯一希望，就是被托付给魔兽王的一个婴儿——",
-      "poster_url": "https://image.tmdb.org/t/p/original/krx4GwKIWVCtr4MgMeGi4lYkz5x.jpg",
-      "title_backdrop": "https://image.tmdb.org/t/p/original/afHlpLivQfcCa4cW4NphLaKpvoy.jpg"
+      "poster_path": "/krx4GwKIWVCtr4MgMeGi4lYkz5x.jpg",
+      "backdrop_path": "/afHlpLivQfcCa4cW4NphLaKpvoy.jpg"
     },
     {
       "id": 246862,
       "title": "新·吊带袜天使",
       "type": "tv",
       "genreTitle": "动画•喜剧•动作冒险",
-      "rating": 10.0,
+      "rating": 10,
       "release_date": "2025-07-10",
       "overview": "神与恶魔夹缝中的城市，堕天市。今天也悄无声息地，可怕的恶灵＜Ghost＞们在侵蚀着这座城市。在这样的时刻，有一些人用人类智慧无法企及的光芒，将人们的欲望和怨念所化的恶灵＜Ghost＞彻底消灭。他们的名字是，天使 Panty＆Stocking！！被赋予了祓除地上蔓延的黑暗使命的堕天使姐妹。她们的真实身份究竟是神的使者……还是恶魔的仆从……。",
-      "poster_url": "https://media.themoviedb.org/t/p/original/kLhsue64k6zhe2mFXt9arBfEmlq.jpg",
-      "title_backdrop": "https://media.themoviedb.org/t/p/original/yJwnFYscPHBILyzWnvWBygkOkQ8.jpg"
+      "poster_path": "/kLhsue64k6zhe2mFXt9arBfEmlq.jpg",
+      "backdrop_path": "/yJwnFYscPHBILyzWnvWBygkOkQ8.jpg"
     },
     {
       "id": 206484,
       "title": "诛仙",
       "type": "tv",
       "genreTitle": "动画•动作冒险",
-      "rating": 10.0,
+      "rating": 10,
       "release_date": "2022-08-02",
       "overview": "一夜间惨变孤儿的张小凡被青云门收为弟子，经过五年刻苦修炼，他在师门七脉会武上大放异彩，后被派往空桑山打探魔教行迹，旅程中，他与师姐陆雪琪遭遇危难，并结识救护了魔教女子碧瑶，同时，新的危险也在前方等待着他。",
-      "poster_url": "https://image.tmdb.org/t/p/original/kSC8drFvUBrcnHe6bz6zwvrnoeo.jpg",
-      "title_backdrop": "https://image.tmdb.org/t/p/original/llTCjeqRVcOKmZa12u3zeRTQMUg.jpg"
+      "poster_path": "/kSC8drFvUBrcnHe6bz6zwvrnoeo.jpg",
+      "backdrop_path": "/llTCjeqRVcOKmZa12u3zeRTQMUg.jpg"
     },
     {
       "id": 86031,
       "title": "石纪元",
       "type": "tv",
       "genreTitle": "动画•动作冒险•喜剧",
-      "rating": 10.0,
+      "rating": 10,
       "release_date": "2025-07-10",
       "overview": "全人类被神奇的现象一瞬间石化后过了几千年——拥有超人般头脑、天生的科学少年·千空苏醒了。在文明遭到毁灭的石头世界（STONE WORLD）里，千空决定要用科学的力量复原整个世界。而与此同时苏醒过来的有，以有着过人体力的儿时玩伴·大木大树为首的伙伴们，从零开始创造文明——从石器时代到现代文明，一定要赶上这科学史的200万年差距！前所未闻的创世冒险谭，就此开幕！",
-      "poster_url": "https://image.tmdb.org/t/p/original/pyq91bpBHNphnNy5mHKUtBEhCeS.jpg",
-      "title_backdrop": "https://image.tmdb.org/t/p/original/4LOmQqSKdob2tLSAGlrhPzKlR7n.jpg"
-    },  
+      "poster_path": "/pyq91bpBHNphnNy5mHKUtBEhCeS.jpg",
+      "backdrop_path": "/4LOmQqSKdob2tLSAGlrhPzKlR7n.jpg"
+    },
     {
       "id": 240411,
       "title": "胆大党",
       "type": "tv",
       "genreTitle": "动画•动作冒险•喜剧",
-      "rating": 10.0,
+      "rating": 10,
       "release_date": "2025-07-04",
       "overview": "出生于灵媒师家族的女高中生·小桃（绫濑桃），与她同年级的超自然爱好者·厄卡伦（高仓健）。小桃在厄卡伦遭到班上同学欺凌时保护了他，两人以此为契机开始有了交流。“相信幽灵存在但否定外星人存在”的小桃，和“相信外星人存在但否定幽灵存在”的厄卡伦争论不休。为了让对方相信外星人和幽灵的存在，小桃去了被称为UFO圣地的废弃医院，厄卡伦去了闹鬼的隧道。在那里，他们遇到了无法理解的极其怪异的现象。在绝境中，小桃觉醒了体内潜藏的力量，厄卡伦获得了诅咒之力，二人开始挑战接连逼近的怪异！也开始了命运之恋！？超能力战斗&青春故事，开幕！",
-      "poster_url": "https://image.tmdb.org/t/p/original/8YaVomOHT6CQ4Bj7U7WvXQWI6WC.jpg",
-      "title_backdrop": "https://image.tmdb.org/t/p/original/bnZv3RCE5AcjCgZqwYXQ947zuXM.jpg"
+      "poster_path": "/8YaVomOHT6CQ4Bj7U7WvXQWI6WC.jpg",
+      "backdrop_path": "/bnZv3RCE5AcjCgZqwYXQ947zuXM.jpg"
     },
     {
       "id": 281058,
       "title": "沉默魔女 沉默魔女的秘密",
       "type": "tv",
       "genreTitle": "动画•喜剧•动作冒险",
-      "rating": 10.0,
+      "rating": 10,
       "release_date": "2025-07-05",
       "overview": "人类必须通过咏唱，才能使用魔法。但有一个少女，却打破了这个定律。“七贤人”，是里迪尔王国的七位最强魔法师，其中之一是人称“沉默魔女”的莫妮卡·埃瓦雷特。她是有史以来第一个创造出无咏唱魔法的年轻天才。然而……她其实极度怕生，和一只黑猫使魔蜗居在深山之中，在无数公式书籍的包围下，默默地进行着魔法研究。但天不遂人愿，她的同事、另一位七贤人“结界魔法师”路易斯·米拉上门拜访。他向迷茫的莫妮卡传达了国王的旨意。那便是——潜入贵族云集的名门学校，执行保护第二王子的绝密任务……",
-      "poster_url": "https://image.tmdb.org/t/p/original/uh2I3uNlBxuygnoM8aDQQY6PZk9.jpg",
-      "title_backdrop": "https://image.tmdb.org/t/p/original/aSKTLVa0N9WwcXQJvk2fPXFYdRo.jpg"
+      "poster_path": "/uh2I3uNlBxuygnoM8aDQQY6PZk9.jpg",
+      "backdrop_path": "/aSKTLVa0N9WwcXQJvk2fPXFYdRo.jpg"
     },
     {
       "id": 244808,
       "title": "拔作岛",
       "type": "tv",
       "genreTitle": "动画•喜剧•剧情",
-      "rating": 10.0,
+      "rating": 10,
       "release_date": "2025-07-19",
       "overview": "青蓝岛……这里是施行特殊条例的乐园岛屿。转学到这里的主人公“橘淳之介”，不仅是个骄傲的童贞，同时也是个深入骨髓的处女厨。但是色情条例对他就读的水乃月学园也不例外，没有发生关系的人会被立即逮捕。淳之介能从绝对遵守纪律的学生会和风纪委员会，通称“SS”的恶魔手中逃脱吗……！？和伙伴们一起死守童贞吧！淳之介的战斗现在开始！",
-      "poster_url": "https://image.tmdb.org/t/p/original/cAUcpvuTub7p4wB9yRo6TWdKJnz.jpg",
-      "title_backdrop": "https://image.tmdb.org/t/p/original/q7ZA4CKBZNyH4CyZbhRhJA1y2F7.jpg"
-    },  
+      "poster_path": "/cAUcpvuTub7p4wB9yRo6TWdKJnz.jpg",
+      "backdrop_path": "/q7ZA4CKBZNyH4CyZbhRhJA1y2F7.jpg"
+    },
     {
       "id": 289745,
       "title": "奥美迦奥特曼",
       "type": "tv",
       "genreTitle": "动作冒险",
-      "rating": 10.0,
+      "rating": 10,
       "release_date": "2025-07-05",
       "overview": "故事设定在一个从未出现过奥特曼与怪兽的地球上。某天，因意外一名外星人从宇宙坠落。失去过往记忆的外星人“奥美迦”化身为地球人模样，被人称为“宙人”。他对人类充满好奇，积极地接触这些陌生的生命体。 当神秘巨型生物接连出现时，尘封的记忆碎片被唤醒，宙人脱口而出“怪兽”二字。面对怪兽的威胁，强烈的使命感驱使他变身成为奥美迦奥特曼，与怪兽作战。 随着故事推进，来自外星的宙人与一位普通青年逐渐成为并肩作战的伙伴。",
-      "poster_url": "https://image.tmdb.org/t/p/original/aIwc1CLT66eI1HEZtL32MYePmh4.jpg",
-      "title_backdrop": "https://image.tmdb.org/t/p/original/AlAE16wAH0lkoy4l0GvOjUkbIzY.jpg"
+      "poster_path": "/aIwc1CLT66eI1HEZtL32MYePmh4.jpg",
+      "backdrop_path": "/AlAE16wAH0lkoy4l0GvOjUkbIzY.jpg"
     },
     {
       "id": 106449,
       "title": "凡人修仙传",
       "type": "tv",
       "genreTitle": "动画•动作冒险",
-      "rating": 10.0,
+      "rating": 10,
       "release_date": "2020-07-25",
       "overview": "平凡少年韩立出生贫困，为了让家人过上更好的生活，自愿前去七玄门参加入门考核，最终被墨大夫收入门下。墨大夫一开始对韩立悉心培养、传授医术，让韩立对他非常感激，但随着一同入门的弟子张铁失踪，韩立才发现了墨大夫的真面目。墨大夫试图夺舍韩立，最终却被韩立反杀。通过墨大夫的遗书韩立得知了一个全新世界：修仙界的存在。在帮助七玄门抵御外敌之后，韩立离开了七玄门，前去墨大夫的家中寻找暖阳宝玉解毒，并帮助墨家人打败了敌人。通过墨大夫之女墨彩环的口中得知太南小会地址，韩立为追寻修仙人的足迹决定前往太南小会，拜别家人后，韩立来到太南谷，结识了一众修仙人士，正式展开了自己的修仙之旅。",
-      "poster_url": "https://image.tmdb.org/t/p/original/3m1UaMLgmpj6krNaQwTpftYFsnz.jpg",
-      "title_backdrop": "https://image.tmdb.org/t/p/original/qs0V1rhIo98gKXimKKduybzMgGi.jpg"
-    },  
+      "poster_path": "/3m1UaMLgmpj6krNaQwTpftYFsnz.jpg",
+      "backdrop_path": "/qs0V1rhIo98gKXimKKduybzMgGi.jpg"
+    },
     {
       "id": 79481,
       "title": "斗破苍穹",
       "type": "tv",
       "genreTitle": "动画•动作冒险",
-      "rating": 10.0,
+      "rating": 10,
       "release_date": "2017-09-30",
       "overview": "萧炎，萧家历史上空前绝后的斗气修炼天才。家族百年之内最年轻的斗者！三年之前，这名声望达到巅峰的天才少年，却是突兀的接受到了有生以来最残酷的打击，他辛辛苦苦修炼十数载方才凝聚的斗之气旋，一夜之间，化为乌有。而且体内的斗之气，也是随着时间的流逝，诡异地变得越来越少导致其实力不断地后退。一夜间，沦落成了路人口中嘲笑的废物！种种打击接踵而至，就在他即将绝望的时候，一缕幽魂（药尘又作药老）从他手上的戒指里浮现，一扇全新的大门在面前开启！",
-      "poster_url": "https://image.tmdb.org/t/p/original/lT9pZfrFk8PgdzsQ7QzpCdiCfFF.jpg",
-      "title_backdrop": "https://image.tmdb.org/t/p/original/7qI2A3aOmtJnbYalAgK23adYykU.jpg"
+      "poster_path": "/lT9pZfrFk8PgdzsQ7QzpCdiCfFF.jpg",
+      "backdrop_path": "/7qI2A3aOmtJnbYalAgK23adYykU.jpg"
     }
   ]
 }
