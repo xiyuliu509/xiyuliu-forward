@@ -1,4 +1,4 @@
-// trakt组件1.0.3，搬运自大佬“huangxd”
+// trakt1.0.2组件，搬运自大佬“huangxd”魔改
 WidgetMetadata = {
     id: "Trakt",
     title: "Trakt我看&Trakt个性化推荐",
@@ -200,7 +200,7 @@ WidgetMetadata = {
             ],
         },
     ],
-    version: "1.0.3",
+    version: "1.0.2",
     requiredVersion: "0.0.1",
     description: "获取Trakt在看、片单并进行个性化推荐",
     author: "𝕏𝕚𝕪𝕦𝕝𝕚𝕦",
@@ -291,7 +291,9 @@ async function fetchImdbIdsFromTraktUrls(traktUrls) {
         try {
             // 1. Fetch with Chinese language preference
             const findResponseZh = await Widget.http.get(`https://api.themoviedb.org/3/find/${imdbId}?api_key=${TMDB_API_KEY}&external_source=imdb_id&language=zh-CN`);
-            const resultsZh = findResponseZh.data.movie_results.concat(findResponseZh.data.tv_results);
+            const movieResultsZh = findResponseZh.data.movie_results.map(item => ({ ...item, type: 'movie' }));
+            const tvResultsZh = findResponseZh.data.tv_results.map(item => ({ ...item, type: 'tv' }));
+            const resultsZh = movieResultsZh.concat(tvResultsZh);
 
             if (resultsZh.length > 0) {
                 let result = resultsZh[0];
@@ -300,7 +302,9 @@ async function fetchImdbIdsFromTraktUrls(traktUrls) {
                 if (!result.poster_path || !result.backdrop_path) {
                     // 3. Fetch with default language to get images
                     const findResponseEn = await Widget.http.get(`https://api.themoviedb.org/3/find/${imdbId}?api_key=${TMDB_API_KEY}&external_source=imdb_id`);
-                    const resultsEn = findResponseEn.data.movie_results.concat(findResponseEn.data.tv_results);
+                    const movieResultsEn = findResponseEn.data.movie_results.map(item => ({ ...item, type: 'movie' }));
+                    const tvResultsEn = findResponseEn.data.tv_results.map(item => ({ ...item, type: 'tv' }));
+                    const resultsEn = movieResultsEn.concat(tvResultsEn);
 
                     if (resultsEn.length > 0) {
                         const enResult = resultsEn[0];
@@ -508,7 +512,7 @@ async function getLocalTmdbData() {
         const response = await Widget.http.get("https://raw.githubusercontent.com/xiyuliu509/xiyuliu-forward/refs/heads/master/ForwardWidgets/Data/TMDB_Trending.json");
         const data = response.data;
 
-        const allItems = [].concat(data.today_global || [], data.week_global_all || [], Array.isArray(data) ? data : []);
+        const allItems = data.trakt || [];
 
         localTmdbData = {};
         for (const item of allItems) {
@@ -535,9 +539,9 @@ function tmdbItemToWidget(item, isLocal) {
     return {
         id: item.id,
         title: item.title || item.name,
-        // type: mediaType, // type 字段会导致显示问题，暂时注释
-        coverUrl: posterUrl,
-        backdropUrl: backdropUrl,
+        type: mediaType,
+        image: posterUrl, // 竖版封面
+        cover: backdropUrl, // 横版封面
         description: isLocal ? item.genreTitle : (item.release_date || item.first_air_date || ''),
         rating: {
             value: item.vote_average ? item.vote_average.toFixed(1) : (item.rating || 'N/A'),
