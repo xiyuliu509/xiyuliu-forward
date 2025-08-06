@@ -1,6 +1,6 @@
 // =============UserScript=============
 // @name         影视聚合查询组件
-// @version      1.3.0
+// @version      1.3.1
 // @description  聚合查询豆瓣/TMDB/IMDB/BGM影视数据
 // @author       阿米诺斯(原作者)，经二次优化图标后
 // =============UserScript=============
@@ -10,7 +10,7 @@ WidgetMetadata = {
   description: "聚合豆瓣、TMDB、IMDB和Bangumi的影视动画榜单",
   author: "𝕏𝕚𝕪𝕦𝕝𝕚𝕦",
   site: "https://github.com/xiyuliu509/xiyuliu-forward",
-  version: "1.0.3",
+  version: "1.0.4",
   requiredVersion: "0.0.1",
   detailCacheDuration: 60,
   modules: [
@@ -61,7 +61,7 @@ WidgetMetadata = {
           type: "constant", 
           value: "https://www.douban.com/doubanapp/dispatch?uri=/subject_collection/movie_real_time_hotest/&dt_dapp=1" },
         { name: "type", 
-          title: "🎭 类型", 
+          title: "📚 类型", 
           type: "constant", 
           value: "movie" }
       ]
@@ -78,7 +78,7 @@ WidgetMetadata = {
           type: "constant", 
           value: "https://www.douban.com/doubanapp/dispatch?uri=/subject_collection/tv_real_time_hotest/&dt_dapp=1" },
         { name: "type", 
-          title: "🎭 类型", 
+          title: "📚 类型", 
           type: "constant", 
           value: "tv" }
       ]
@@ -95,12 +95,11 @@ WidgetMetadata = {
           type: "constant", 
           value: "https://www.douban.com/doubanapp/dispatch?uri=/subject_collection/subject_real_time_hotest/&dt_dapp=1" },
         { name: "type", 
-          title: "🎭 类型", 
+          title: "📚 类型", 
           type: "constant", 
           value: "subject" }
       ]
     },
-
     // --- 精选榜单 ---
     {
       title: "豆瓣 Top 250 电影",
@@ -156,7 +155,7 @@ WidgetMetadata = {
         },
         {
           name: "tags", 
-          title: "🎭 类型", 
+          title: "📚 类型", 
           type: "enumeration",
           value: "",
           belongTo: {
@@ -206,7 +205,7 @@ WidgetMetadata = {
       params: [
         {
           name: "type", 
-          title: "🎭 类型", 
+          title: "📚 类型", 
           type: "enumeration",
           enumOptions: [
             { title: "综合", value: "tv" }, 
@@ -225,27 +224,6 @@ WidgetMetadata = {
     },
     // =============TMDB模块=============
     // --- 当前与趋势模块 ---
-    {
-        title: "TMDB 正在热映",
-        description: "当前影院或流媒体上映的电影/剧集",
-        requiresWebView: false,
-        functionName: "tmdbNowPlaying",
-        cacheDuration: 3600,
-        params: [
-            { 
-                name: "type", 
-                title: "🎭类型", 
-                type: "enumeration", 
-                enumOptions: [
-                    { title: "电影", value: "movie" },
-                    { title: "剧集", value: "tv" }
-                ], 
-                value: "movie" 
-            },
-            { name: "page", title: "页码", type: "page" },
-            { name: "language", title: "语言", type: "language", value: "zh-CN" }
-        ]
-    },
     {
       title: "TMDB 今日热门",
       description: "今日热门电影与剧集",
@@ -266,6 +244,17 @@ WidgetMetadata = {
         { name: "language", title: "语言", type: "language", value: "zh-CN" }
       ]
     },
+    {
+    title: "TMDB 热门电影",
+    description: "当前热门电影",
+    requiresWebView: false,
+    functionName: "tmdbPopularMovies",
+    cacheDuration: 60,
+    params: [
+        { name: "language", title: "语言", type: "language", value: "zh-CN" },
+        { name: "page", title: "页码", type: "page" }
+      ]
+    },
     // --- 常规发现模块 ---
     {
         title: "TMDB 高分内容",
@@ -276,7 +265,7 @@ WidgetMetadata = {
         params: [
             { 
                 name: "type", 
-                title: "🎭类型", 
+                title: "📚类型", 
                 type: "enumeration", 
                 enumOptions: [
                     { title: "电影", value: "movie" },
@@ -304,7 +293,7 @@ WidgetMetadata = {
                 value: "",
                 belongTo: {
                   paramName: "air_status",
-                  value: ["released","upcoming"],
+                  value: ["released","upcoming",""],
                 },
                 enumOptions: [
                     { title: "全部", value: "" },
@@ -335,13 +324,13 @@ WidgetMetadata = {
             },
             {
                 name: "with_genres",
-                title: "🎭内容类型",
+                title: "📚内容类型",
                 type: "enumeration",
                 description: "选择要筛选的内容类型",
                 value: "",
                 belongTo: {
                   paramName: "air_status",
-                  value: ["released","upcoming"],
+                  value: ["released","upcoming",""],
                 },
                 enumOptions: [
                     { title: "全部类型", value: "" },
@@ -369,7 +358,8 @@ WidgetMetadata = {
                 value: "released",
                 enumOptions: [
                     { title: "已上映", value: "released" },
-                    { title: "未上映", value: "upcoming" }
+                    { title: "未上映", value: "upcoming" },
+                    { title: "全部", value: "" }
                 ]
             },
             {
@@ -405,7 +395,7 @@ WidgetMetadata = {
           description: "选择一个公司以查看其剧集内容",
           belongTo: {
             paramName: "air_status",
-            value: ["released","upcoming"],
+            value: ["released","upcoming",""],
           },
           enumOptions: [
             { title: "全部", value: "" },
@@ -428,13 +418,13 @@ WidgetMetadata = {
         },
         {
           name: "with_genres",
-          title: "🎭内容类型",
+          title: "📚内容类型",
           type: "enumeration",
           description: "选择要筛选的内容类型",
           value: "",
           belongTo: {
             paramName: "air_status",
-            value: ["released","upcoming"],
+            value: ["released","upcoming",""],
           },
           enumOptions: [
             { title: "全部类型", value: "" },
@@ -467,7 +457,8 @@ WidgetMetadata = {
           value: "released",
           enumOptions: [
             { title: "已上映", value: "released" },
-            { title: "未上映", value: "upcoming" }
+            { title: "未上映", value: "upcoming" },
+            { title: "全部", value: "" }
           ]
         },
         {
@@ -529,7 +520,7 @@ WidgetMetadata = {
             },
             { 
                 name: "with_genres", 
-                title: "🎭类型筛选", 
+                title: "📚类型筛选", 
                 type: "enumeration", 
                 description: "选择电影类型", 
                 value: "",
@@ -1798,13 +1789,14 @@ async function fetchImdbItemsForDouban(scItems) {
     const promises = scItems.map(async (scItem) => {
         const titleNormalizationRules = [
             { pattern: /^\u7f57\u5c0f\u9ed1\u6218\u8bb0/, replacement: '\u7f57\u5c0f\u9ed1\u6218\u8bb0', forceMovieType: true },
+            { pattern: /^\u7d2b\u5ddd \u7b2c\u4e8c\u5b63/, replacement: '\u7d2b\u5ddd', forceFirstResult: true },
             { pattern: /^\u5343\u4e0e\u5343\u5bfb/, replacement: '\u5343\u4e0e\u5343\u5bfb', forceMovieType: true },
             { pattern: /^\u54c8\u5c14\u7684\u79fb\u52a8\u57ce\u5821/, replacement: '\u54c8\u5c14\u7684\u79fb\u52a8\u57ce\u5821', forceMovieType: true },
             { pattern: /^\u9b3c\u706d\u4e4b\u5203/, replacement: '\u9b3c\u706d\u4e4b\u5203', forceMovieType: true },
             { pattern: /^\u5929\u6c14\u4e4b\u5b50/, replacement: '\u5929\u6c14\u4e4b\u5b50', forceMovieType: true },
             { pattern: /^\u5742\u672c\u65e5\u5e38 Part 2/, replacement: '\u5742\u672c\u65e5\u5e38' },
-            { pattern: /^\u82cd\u5170\u8bc02 \u5f71\u4e09\u754c\u7bc7/, replacement: '\u82cd\u5170\u8bc0', forceFirstResult: true },
             { pattern: /^\u6ca7\u5143\u56fe2 \u5143\u521d\u5c71\u756a\u5916\u7bc7/, replacement: '\u6ca7\u5143\u56fe' },
+            { pattern: /^\u82cd\u5170\u8bc02 \u5f71\u4e09\u754c\u7bc7/, replacement: '\u82cd\u5170\u8bc0 \u52a8\u753b\u7248', forceFirstResult: true },
             { pattern: /^\u77f3\u7eaa\u5143 \u7b2c\u56db\u5b63 Part 2/, replacement: '\u77f3\u7eaa\u5143' },
             { pattern: /^\u53cc\u4eba\u72ec\u81ea\u9732\u8425/, replacement: 'ふたりソロキャンプ' },
             { pattern: /^\u5730\u7f1a\u5c11\u5e74\u82b1\u5b50\u541b \u7b2c\u4e8c\u5b63 \u540e\u7bc7/, replacement: '\u5730\u7f1a\u5c11\u5e74\u82b1\u5b50\u541b' },
@@ -2072,14 +2064,8 @@ async function fetchTmdbData(api, params) {
         });
 }
 
-async function tmdbNowPlaying(params) {
-    const type = params.type || 'movie';
-    const api = type === 'movie' ? "movie/now_playing" : "tv/on_the_air";
-    return await fetchTmdbData(api, params);
-}
-
 async function loadTmdbTrendingData() {
-    const response = await Widget.http.get("https://raw.githubusercontent.com/quantumultxx/ForwardWidgets/refs/heads/main/data/TMDB_Trending.json");
+    const response = await Widget.http.get("https://raw.githubusercontent.com/pack1r/ForwardWidgets/refs/heads/main/data/TMDB_Trending.json");
     return response.data;
 }
 
@@ -2112,6 +2098,50 @@ async function loadWeekGlobalMovies(params) {
         posterPath: item.poster_url,
         backdropPath: item.title_backdrop,
         mediaType: item.type,
+    }));
+}
+
+async function tmdbPopularMovies(params) {
+    if ((parseInt(params.page) || 1) === 1) {
+        const data = await loadTmdbTrendingData();
+        return data.popular_movies
+      .slice(0, 15)
+      .map(item => ({
+        id: item.id.toString(),
+        type: "tmdb",
+        title: item.title,
+        genreTitle: item.genreTitle,
+        rating: item.rating,
+        description: item.overview,
+        releaseDate: item.release_date,
+        posterPath: item.poster_url,
+        backdropPath: item.title_backdrop,
+        mediaType: item.type
+            }));
+    }
+    
+    const [data, genres] = await Promise.all([
+        Widget.tmdb.get(`/movie/popular`, { 
+            params: { 
+                language: params.language || 'zh-CN',
+                page: parseInt(params.page) || 1,
+                region: 'CN'
+            } 
+        }),
+        fetchTmdbGenres()
+    ]);
+    
+    return data.results.map(item => ({
+        id: String(item.id),
+        type: "tmdb",
+        title: item.title,
+        description: item.overview,
+        releaseDate: item.release_date,
+        backdropPath: item.backdrop_path,
+        posterPath: item.poster_path,
+        rating: item.vote_average,
+        mediaType: "movie",
+        genreTitle: getTmdbGenreTitles(item.genre_ids, "movie")
     }));
 }
 
@@ -2285,6 +2315,7 @@ async function loadImdbCardItems(params = {}) {
   const end = start + limit;
   return videoIds.slice(start, end);
 }
+
 //===============BGM功能函数===============
 const WidgetConfig_bg = {
     MAX_CONCURRENT_DETAILS_FETCH: 10, 
