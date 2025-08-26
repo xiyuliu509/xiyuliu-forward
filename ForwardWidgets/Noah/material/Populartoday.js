@@ -5,7 +5,7 @@
 // @author       阿米诺斯(原作者)，经二次优化图标后
 // =============UserScript=============
 WidgetMetadata = {
-  id: "Aggregation_list",
+  id: "Popular_today",
   title: "今日热门",
   description: "聚焦今日热门剧集、电影",
   author: "𝕏𝕚𝕪𝕦𝕝𝕚𝕦",
@@ -37,9 +37,9 @@ WidgetMetadata = {
         { name: "language", title: "语言", type: "language", value: "zh-CN" },
         { name: "page", title: "页码", type: "page" }
       ]
-    },
-   
-
+    }
+  ]
+};
 // ===============屏蔽配置===============
 // 被屏蔽的电影/剧集ID列表
 const BLOCKED_MOVIE_IDS = new Set([
