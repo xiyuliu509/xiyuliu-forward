@@ -4,11 +4,20 @@
   "icon": "https://raw.githubusercontent.com/xiyuliu509/xiyuliu-forward/refs/heads/master/Forward.png",
   "widgets": [
     {
+      "id": "Popular today",
+      "title": "今日热门",
+      "description": "聚焦今日热门剧集/影视",
+      "requiredVersion": "0.0.1",
+      "version": "1.0.1",
+      "author": "𝕏𝕚𝕪𝕦𝕝𝕚𝕦",
+      "url": "https://raw.githubusercontent.com/xiyuliu509/xiyuliu-forward/refs/heads/master/ForwardWidgets/Noah/material/Populartoday.js"
+    },
+    {
       "id": "Aggregation_list",
       "title": "影视榜单",
       "description": "聚合豆瓣、TMDB、IMDB和Bangumi的影视动画榜单",
       "requiredVersion": "0.0.1",
-      "version": "1.0.1",
+      "version": "1.0.4",
       "author": "𝕏𝕚𝕪𝕦𝕝𝕚𝕦",
       "url": "https://raw.githubusercontent.com/xiyuliu509/xiyuliu-forward/refs/heads/master/ForwardWidgets/Noah/material/aggregationlist.js"
     },
@@ -59,3 +68,4 @@
     }
   ]
 }
+
