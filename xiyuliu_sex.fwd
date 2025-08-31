@@ -47,15 +47,7 @@
       "version": "1.0.1",
       "author": "𝕏𝕚𝕪𝕦𝕝𝕚𝕦",
       "url": "https://raw.githubusercontent.com/xiyuliu509/xiyuliu-forward/refs/heads/master/ForwardWidgets/Eden/javrate.js"
-    },
-    {
-      "id": "xvideos",
-      "title": "XVideos",
-      "description": "Xvideos",
-      "requiredVersion": "0.0.1",
-      "version": "1.0.1",
-      "author": "𝕏𝕚𝕪𝕦𝕝𝕚𝕦",
-      "url": "https://raw.githubusercontent.com/xiyuliu509/xiyuliu-forward/refs/heads/master/ForwardWidgets/Eden/xvideos.js"
     }
   ]
 }
+
