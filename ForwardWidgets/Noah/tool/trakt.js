@@ -1,4 +1,4 @@
-// trakt组件，搬运自大佬“huangxd”
+// trakt组件
 WidgetMetadata = {
     id: "Trakt",
     title: "Trakt我看&Trakt个性化推荐",
@@ -14,6 +14,12 @@ WidgetMetadata = {
                     title: "用户名",
                     type: "input",
                     description: "需在Trakt设置里打开隐私开关，未填写情况下接口不可用",
+                },
+                {
+                    name: "cookie",
+                    title: "用户Cookie",
+                    type: "input",
+                    description: "_traktsession=xxxx，未填写情况下接口不可用；可登陆网页后，通过loon，Qx等软件抓包获取Cookie",
                 },
                 {
                     name: "status",
@@ -200,12 +206,26 @@ WidgetMetadata = {
             ],
         },
     ],
-    version: "1.0.1",
+    version: "1.0.2",
     requiredVersion: "0.0.1",
     description: "获取Trakt在看、片单并进行个性化推荐",
     author: "𝕏𝕚𝕪𝕦𝕝𝕚𝕦",
     site: "https://github.com/huangxd-/ForwardWidgets"
 };
+
+async function getUrls(traktUrls) {
+  try {
+    // 检查是否为 Promise 列表
+    if (!Array.isArray(traktUrls) || !traktUrls.some(item => item instanceof Promise)) {
+      return traktUrls; // 如果不是 Promise 列表，直接返回
+    }
+    const urls = await Promise.all(traktUrls);
+    return urls;
+  } catch (error) {
+    console.error('Error resolving URLs:', error);
+    return [];
+  }
+}
 
 function extractTraktUrlsFromResponse(responseData, minNum, maxNum, random = false) {
     let docId = Widget.dom.parse(responseData);
@@ -217,6 +237,7 @@ function extractTraktUrlsFromResponse(responseData, minNum, maxNum, random = fal
     let traktUrls = Array.from(new Set(metaElements
         .map(el => el.getAttribute?.('content') || Widget.dom.attr(el, 'content'))
         .filter(Boolean)));
+    console.log(traktUrls);
     if (random) {
         const shuffled = traktUrls.sort(() => 0.5 - Math.random());
         return shuffled.slice(0, Math.min(9, shuffled.length));
@@ -258,41 +279,76 @@ function extractTraktUrlsInProgress(responseData, minNum, maxNum) {
     return Array.from(new Set(traktUrls));
 }
 
-async function fetchImdbIdsFromTraktUrls(traktUrls) {
-    let imdbIdPromises = traktUrls.map(async (url) => {
-        try {
-            let detailResponse = await Widget.http.get(url, {
-                headers: {
-                    "User-Agent":
-                        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
-                    "Cache-Control": "no-cache, no-store, must-revalidate",
-                    "Pragma": "no-cache",
-                    "Expires": "0",
-                },
-            });
+async function fetchImdbIdsFromTraktUrls(traktUrls, headers) {
+    let imdbIdPromises = traktUrls
+        .filter(url =>
+            (url.includes('movies') || url.includes('shows')) &&
+            !url.includes('episodes')
+        )
+        .map(async (url) => {
+            try {
+                let detailResponse = await Widget.http.get(url, {
+                    headers: {
+                        "Cache-Control": "no-cache, no-store, must-revalidate",
+                        "Pragma": "no-cache",
+                        "Expires": "0",
+                        ...headers,
+                    },
+                });
 
-            let detailDoc = Widget.dom.parse(detailResponse.data);
-            let imdbLinkEl = Widget.dom.select(detailDoc, 'a#external-link-imdb')[0];
+                // console.log("detailResponse data: ", detailResponse.data);
 
-            if (!imdbLinkEl) return null;
+                let detailDoc = Widget.dom.parse(detailResponse.data);
+                let imdbLinkEl = Widget.dom.select(detailDoc, 'a#external-link-imdb')[0];
 
-            let href = Widget.dom.attr(imdbLinkEl, 'href');
-            let match = href.match(/title\/(tt\d+)/);
+                let match;
+                let href;
 
-            return match ? `${match[1]}` : null;
-        } catch {
-            return null; // 忽略单个失败请求
-        }
-    });
+                if (imdbLinkEl) {
+                    href = await Widget.dom.attr(imdbLinkEl, 'href');
+                    console.log("imdb href: ", href);
+                    if (!href.includes("find?q=")) {
+                        match = href.match(/title\/(tt\d+)/);
+                    } else {
+                        let tmdbLinkEl = Widget.dom.select(detailDoc, 'a#external-link-tmdb')[0];
+
+                        if (!tmdbLinkEl) return null;
+
+                        href = await Widget.dom.attr(tmdbLinkEl, 'href');
+                        console.log("tmdb href: ", href);
+                        match = href.match(/(movie|tv)\/(\d+)/);
+                    }
+                }
+
+                return match ? `${match}` : null;
+            } catch {
+                return null; // 忽略单个失败请求
+            }
+        });
 
     let imdbIds = [...new Set(
         (await Promise.all(imdbIdPromises))
             .filter(Boolean)
             .map((item) => item)
-    )].map((id) => ({
-        id,
-        type: "imdb",
-    }));
+    )].map((item) => {
+        let itemArray = item.split(',');
+        // 检查 item[0] 是否包含 "title"
+        if (item.includes('title')) {
+            // 如果包含 "title"，使用 item[1] 作为 id，并设置 type 为 "imdb"
+            const id = itemArray[1];
+            return {
+                id,
+                type: "imdb"
+            };
+        } else {
+            // 如果不包含 "title"，使用 item[2] 作为 id，并设置 type 为 "tmdb"
+            const id = `${itemArray[1]}.${itemArray[2]}`;
+            return {
+                id,
+                type: "tmdb"
+            };
+        }
+    });
     console.log("请求imdbIds:", imdbIds)
     return imdbIds;
 }
@@ -301,8 +357,6 @@ async function fetchTraktData(url, headers = {}, status, minNum, maxNum, random 
     try {
         const response = await Widget.http.get(url, {
             headers: {
-                "User-Agent":
-                    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
                 "Cache-Control": "no-cache, no-store, must-revalidate",
                 "Pragma": "no-cache",
                 "Expires": "0",
@@ -312,18 +366,23 @@ async function fetchTraktData(url, headers = {}, status, minNum, maxNum, random 
 
         console.log("请求结果:", response.data);
 
+        let traktUrlsTmp = [];
         let traktUrls = [];
         if (status === "progress") {
-            traktUrls = extractTraktUrlsInProgress(response.data, minNum, maxNum);
+            traktUrlsTmp = extractTraktUrlsInProgress(response.data, minNum, maxNum);
         } else {
-            traktUrls = extractTraktUrlsFromResponse(response.data, minNum, maxNum, random);
+            traktUrlsTmp = extractTraktUrlsFromResponse(response.data, minNum, maxNum, random);
         }
+
+        traktUrls = await getUrls(traktUrlsTmp);
+
+        console.log(traktUrls);
 
         if (order === "desc") {
             traktUrls = traktUrls.reverse();
         }
 
-        return await fetchImdbIdsFromTraktUrls(traktUrls);
+        return await fetchImdbIdsFromTraktUrls(traktUrls, headers);
     } catch (error) {
         console.error("处理失败:", error);
         throw error;
@@ -334,6 +393,7 @@ async function loadInterestItems(params = {}) {
     try {
         const page = params.page;
         const userName = params.user_name || "";
+        const cookie = params.cookie || "";
         let status = params.status || "";
         const random = status === "random_watchlist";
         if (random) {
@@ -349,12 +409,16 @@ async function loadInterestItems(params = {}) {
             throw new Error("必须提供 Trakt 用户名");
         }
 
+        if (!cookie) {
+            throw new Error("必须提供用户Cookie");
+        }
+
         if (random && page > 1) {
             return [];
         }
 
         let url = `https://trakt.tv/users/${userName}/${status}?page=${traktPage}`;
-        return await fetchTraktData(url, {}, status, minNum, maxNum, random);
+        return await fetchTraktData(url, {Cookie: cookie}, status, minNum, maxNum, random);
     } catch (error) {
         console.error("处理失败:", error);
         throw error;
@@ -389,17 +453,33 @@ async function loadListItems(params = {}) {
         const listName = params.list_name || "";
         const sortBy = params.sort_by || "";
         const sortHow = params.sort_how || "";
-        const count = 20
-        const minNum = ((page - 1) % 6) * count + 1
-        const maxNum = ((page - 1) % 6) * count + 20
-        const traktPage = Math.floor((page - 1) / 6) + 1
+        const count = 20;
 
         if (!userName || !listName) {
             throw new Error("必须提供 Trakt 用户名 和 片单列表名");
         }
 
-        let url = `https://trakt.tv/users/${userName}/lists/${listName}?page=${traktPage}&sort=${sortBy},${sortHow}`;
-        return await fetchTraktData(url, {}, "", minNum, maxNum);
+        let url = `https://hd.trakt.tv/users/${userName}/lists/${listName}/items/movie,show?page=${page}&limit=${count}&sort_by=${sortBy}&sort_how=${sortHow}`;
+
+        const response = await Widget.http.get(url, {
+            headers: {
+                "User-Agent":
+                    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+                "trakt-api-key": "201dc70c5ec6af530f12f079ea1922733f6e1085ad7b02f36d8e011b75bcea7d",
+            },
+        });
+
+        console.log("请求结果:", response.data);
+
+        const data = typeof response.data === 'string' ? JSON.parse(response.data) : response.data;
+        const result = data
+            .filter(item => item[item.type]?.ids?.imdb != null)
+            .map(item => ({
+                id: item[item.type].ids.imdb,
+                type: "imdb"
+            }));
+
+        return result;
     } catch (error) {
         console.error("处理失败:", error);
         throw error;
