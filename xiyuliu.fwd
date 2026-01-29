@@ -22,6 +22,15 @@
       "url": "https://raw.githubusercontent.com/xiyuliu509/xiyuliu-forward/refs/heads/master/ForwardWidgets/Noah/material/aggregationlist.js"
     },
     {
+      "id": "trakt_personal_fixed",
+      "title": "Trakt 个人中心",
+      "description": "一站式管理 Trakt 待看、收藏、历史。支持分页和排序优化",
+      "requiredVersion": "0.0.1",
+      "version": "0.0.1",
+      "author": "𝕏𝕚𝕪𝕦𝕝𝕚𝕦",
+      "url": "https://raw.githubusercontent.com/xiyuliu509/xiyuliu-forward/refs/heads/master/ForwardWidgets/Noah/tool/owner.js"
+    },
+    {
       "id": "Bangumi_charts",
       "title": "Bangumi 热门榜单",
       "description": "获取Bangumi近期热门、每日放送数据，支持榜单筛选。",
@@ -68,4 +77,5 @@
     }
   ]
 }
+
 
